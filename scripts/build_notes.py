@@ -381,7 +381,6 @@ NOTE_PAGE_TEMPLATE = """<!DOCTYPE html>
     <nav class=\"site-nav\">
       <a href=\"../index.html\">首页</a>
       <a href=\"../papers.html\">论文精选</a>
-      <a href=\"../ideas.html\">研究想法</a>
       <a href=\"../resources.html\">工具与资源</a>
       <a href=\"../notes.html\" class=\"active\">随笔</a>
       <a href=\"../contact.html\">联系我</a>
@@ -411,7 +410,6 @@ NOTE_PAGE_TEMPLATE = """<!DOCTYPE html>
 
   <footer class=\"site-footer\">
     <p>© <span id=\"year\"></span> 炎症衰老研究笔记</p>
-    <p>邮箱：<a href=\"mailto:tbsxiaowen@google.com\">tbsxiaowen@google.com</a></p>
   </footer>
 
   <script>
