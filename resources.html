@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>炎症衰老研究 - 工具与资源</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">IA</span>
+      <div>
+        <h1>炎症衰老研究笔记</h1>
+        <p class="tagline">工具与资源</p>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html">首页</a>
+      <a href="papers.html">论文精选</a>
+      <a href="resources.html" class="active">工具与资源</a>
+      <a href="notes.html">随笔</a>
+      <a href="contact.html">联系我</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="hero hero-sub">
+      <div class="hero-copy">
+        <span class="badge">Toolkit</span>
+        <h2>把工具箱装满：数据、分析与协议</h2>
+        <p>精挑细选 inflammaging 研究常用的数据集、分析软件与实验 SOP，让灵感落地更顺畅。</p>
+      </div>
+      <div class="hero-illustration hero-illustration--mini" aria-hidden="true">
+        <div class="blob blob-3"></div>
+        <div class="spark spark-2"></div>
+      </div>
+    </section>
+
+    <section class="section resource-grid">
+      <article class="resource-card">
+        <span class="card-eyebrow">数据集</span>
+        <h3>发现适配的原始数据</h3>
+        <ul>
+          <li><a href="https://www.ncbi.nlm.nih.gov/geo/" target="_blank" rel="noopener">GEO 基因表达数据库</a></li>
+          <li><a href="https://portal.immport.org/" target="_blank" rel="noopener">ImmPort 免疫数据平台</a></li>
+          <li><a href="https://agingportal.nih.gov/" target="_blank" rel="noopener">NIH Aging Portal</a></li>
+        </ul>
+      </article>
+      <article class="resource-card">
+        <span class="card-eyebrow">分析工具</span>
+        <h3>让多组学分析更顺手</h3>
+        <ul>
+          <li><a href="https://scanpy.readthedocs.io/" target="_blank" rel="noopener">Scanpy 单细胞分析</a></li>
+          <li><a href="https://morpheus.net" target="_blank" rel="noopener">Morpheus 热图与聚类工具</a></li>
+          <li><a href="https://cytoscape.org/" target="_blank" rel="noopener">Cytoscape 网络分析</a></li>
+        </ul>
+      </article>
+      <article class="resource-card">
+        <span class="card-eyebrow">实验协议</span>
+        <h3>实验台上的标准动作</h3>
+        <ul>
+          <li>炎症细胞因子 ELISA 标准流程</li>
+          <li>小鼠衰老模型建模指南</li>
+          <li>PBMC 分离与冷冻保存步骤</li>
+        </ul>
+      </article>
+      <article class="resource-card">
+        <span class="card-eyebrow">阅读工具</span>
+        <h3>让信息摄入更高效</h3>
+        <ul>
+          <li><a href="https://www.zotero.org/" target="_blank" rel="noopener">Zotero 文献管理</a></li>
+          <li><a href="https://www.connectedpapers.com/" target="_blank" rel="noopener">Connected Papers 文献图谱</a></li>
+          <li><a href="https://typeset.io/" target="_blank" rel="noopener">Typeset 学术写作助手</a></li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section note">
+      <h3>后续计划</h3>
+      <p>准备整理实验日志模板、数据分析脚本示例与开源项目推荐，持续丰富工具箱。</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> 炎症衰老研究笔记</p>
+    <p>邮箱：<a href="mailto:your.email@example.com">your.email@example.com</a></p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
