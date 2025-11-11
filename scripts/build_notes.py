@@ -293,8 +293,9 @@ def collect_notes() -> List[Note]:
         tags: List[str] = meta.get("tags", [])
         summary: str = meta.get("summary", "")
 
+        body_lines = body_raw.splitlines()
         summary_lines = []
-        for line in body_raw.splitlines():
+        for line in body_lines:
             stripped = line.strip()
             if not stripped or stripped.startswith(">"):
                 summary_lines.append("")
@@ -312,7 +313,17 @@ def collect_notes() -> List[Note]:
             summary = clean_summary[:140] + "…" if len(clean_summary) > 140 else clean_summary
 
         slug = slugify(title, fallback_seed=md_path.stem, sequence=idx)
-        html_body = markdown_to_html(body_raw)
+        body_without_meta = []
+        for line in body_lines:
+            stripped = line.strip()
+            if stripped.startswith(">") and any(key in stripped for key in ["date", "tags", "title"]):
+                continue
+            body_without_meta.append(line)
+
+        body_clean = "\n".join(body_without_meta).strip()
+
+        # 构建展现用的 meta 信息（在正文最前面显示）
+        html_body = markdown_to_html(body_clean)
 
         notes.append(
             Note(
@@ -430,10 +441,20 @@ def write_note_pages(notes: List[Note]) -> None:
         tags_html = "，".join(note.tags) if note.tags else "暂无标签"
         meta_line = f"{note.date_display} · {tags_html}"
         detail_path = NOTE_OUTPUT_DIR / f"{note.slug}.html"
+        meta_lines = []
+        if note.date_display and note.date_display != "未注明日期":
+            meta_lines.append(f"日期：{html.escape(note.date_display)}")
+        if note.tags:
+            meta_lines.append(f"标签：{html.escape('、'.join(note.tags))}")
+
+        meta_html = "\n".join(f"<p class=\"article-detail__meta\">{line}</p>" for line in meta_lines)
+        body_html = note.html_body
+        combined_body = meta_html + "\n" + body_html if meta_html else body_html
+
         detail_html = NOTE_PAGE_TEMPLATE.format(
             title=html.escape(note.title),
             meta_line=html.escape(meta_line),
-            body=textwrap.indent(note.html_body, "        ")
+            body=textwrap.indent(combined_body, "        ")
         )
         detail_path.write_text(detail_html, encoding="utf-8")
 
