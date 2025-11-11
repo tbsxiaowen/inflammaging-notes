@@ -69,29 +69,18 @@
     <section class="section message-board">
       <article class="contact-card contact-card--form">
         <span class="card-eyebrow">留言板</span>
-        <h3>给我留信</h3>
-        <p>留下你对 inflammaging 的想法或合作意向，提交后我会第一时间查看并回复。</p>
-        <form class="message-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-          <div class="form-grid">
-            <label>
-              <span>称呼</span>
-              <input type="text" name="name" placeholder="请输入您的称呼" required>
-            </label>
-            <label>
-              <span>邮箱</span>
-              <input type="email" name="_replyto" placeholder="example@mail.com" required>
-            </label>
-          </div>
-          <label class="form-block">
-            <span>留言</span>
-            <textarea name="message" rows="5" placeholder="分享你的研究想法、问题或合作机会..." required></textarea>
-          </label>
-          <input type="hidden" name="subject" value="网站留言：炎症衰老研究笔记">
-          <div class="form-actions">
-            <button type="submit" class="button button-primary">发送留言</button>
-            <p class="form-tip">请留下常用邮箱，便于及时回复。</p>
-          </div>
-        </form>
+        <h3>直接留言</h3>
+        <p>使用 GitHub 账号登录后即可在下方发表评论，内容会同步保存为仓库的 Issue 记录，便于追踪和回复。</p>
+        <div class="comment-widget">
+          <script src="https://utteranc.es/client.js"
+                  repo="tbsxiaowen/inflammaging-notes"
+                  issue-term="pathname"
+                  label="comment"
+                  theme="github-light"
+                  crossorigin="anonymous"
+                  async>
+          </script>
+        </div>
       </article>
     </section>
   </main>

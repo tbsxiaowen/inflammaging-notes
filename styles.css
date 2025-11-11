@@ -654,73 +654,9 @@ a {
   padding-bottom: 2.2rem;
 }
 
-.message-form {
+.comment-widget {
   margin-top: 1.5rem;
-  display: grid;
-  gap: 1.4rem;
-}
-
-.form-grid {
-  display: grid;
-  gap: 1.2rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.message-form label {
-  display: grid;
-  gap: 0.55rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.message-form label span {
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-}
-
-.message-form input,
-.message-form textarea {
-  width: 100%;
-  padding: 0.75rem 0.9rem;
-  border-radius: 14px;
-  border: 2px solid var(--border-strong);
-  background: #fff;
-  font-size: 0.98rem;
-  box-shadow: 6px 6px 0 rgba(17, 24, 39, 0.15);
-  font-family: inherit;
-  resize: vertical;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.message-form input::placeholder,
-.message-form textarea::placeholder {
-  color: rgba(75, 85, 99, 0.6);
-}
-
-.message-form input:focus,
-.message-form textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  transform: translate(-3px, -3px);
-  box-shadow: 10px 10px 0 rgba(17, 24, 39, 0.2);
-}
-
-.form-block {
-  display: grid;
-  gap: 0.6rem;
-}
-
-.form-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.9rem;
-}
-
-.form-tip {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  padding: 1rem 0;
 }
 
 .site-footer {
