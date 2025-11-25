@@ -28,9 +28,20 @@ from typing import List
 BASE_DIR = Path(__file__).resolve().parent.parent
 MARKDOWN_DIR = BASE_DIR / "markdown 文章"
 NOTES_FILE = BASE_DIR / "basics.html"
+PAPERS_FILE = BASE_DIR / "papers.html"
+PATHWAYS_FILE = BASE_DIR / "pathways-methods.html"
+STORIES_FILE = BASE_DIR / "stories-evolution.html"
 NOTE_OUTPUT_DIR = BASE_DIR / "notes"
 PLACEHOLDER_START = "<!-- BEGIN:ARTICLE_LIST -->"
 PLACEHOLDER_END = "<!-- END:ARTICLE_LIST -->"
+
+# 板块映射
+CATEGORY_MAP = {
+    "basics": ("basics.html", "Basics｜基础概念", "hero-sub--basics", "Basics"),
+    "papers": ("papers.html", "Papers｜论文拆解", "hero-sub--papers", "Papers"),
+    "pathways": ("pathways-methods.html", "Pathways & Methods｜通路与方法区", "hero-sub--pathways", "Pathways"),
+    "stories": ("stories-evolution.html", "Stories & Evolution｜人类演化 & 疾病小随笔", "hero-sub--stories", "Stories"),
+}
 
 try:
     import markdown  # type: ignore
@@ -50,6 +61,7 @@ class Note:
     tags: List[str]
     slug: str
     html_body: str
+    category: str = "basics"  # 默认分类为 basics
 
     def __post_init__(self) -> None:
         try:
@@ -289,6 +301,7 @@ def collect_notes() -> List[Note]:
         date_display: str = meta.get("date", "未注明日期")
         tags: List[str] = meta.get("tags", [])
         summary: str = meta.get("summary", "")
+        category: str = meta.get("category", "basics")  # 默认分类为 basics
 
         body_lines = body_raw.splitlines()
         summary_lines = []
@@ -330,6 +343,7 @@ def collect_notes() -> List[Note]:
                 tags=tags,
                 slug=slug,
                 html_body=html_body,
+                category=category,
             )
         )
     notes.sort(reverse=True)
@@ -366,12 +380,24 @@ def build_article_html(notes: List[Note]) -> str:
     return "\n".join(rendered)
 
 
-NOTE_PAGE_TEMPLATE = """<!DOCTYPE html>
+def get_note_page_template(category: str) -> str:
+    """根据 category 生成对应的详情页模板"""
+    category_info = CATEGORY_MAP.get(category, CATEGORY_MAP["basics"])
+    html_file, page_title, hero_class, badge = category_info
+    
+    # 生成导航栏，当前板块高亮
+    nav_links = []
+    for cat, (hf, pt, _, _) in CATEGORY_MAP.items():
+        active = ' class="active"' if cat == category else ''
+        nav_links.append(f'      <a href="../{hf}"{active}>{pt}</a>')
+    nav_html = "\n".join(nav_links)
+    
+    return f"""<!DOCTYPE html>
 <html lang=\"zh-CN\">
 <head>
   <meta charset=\"UTF-8\">
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-  <title>{title} - Basics｜基础概念</title>
+  <title>{{{{title}}}} - {page_title}</title>
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
   <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap\" rel=\"stylesheet\">
@@ -383,26 +409,23 @@ NOTE_PAGE_TEMPLATE = """<!DOCTYPE html>
       <span class=\"brand-mark\">IA</span>
       <div>
         <h1>炎症衰老研究笔记</h1>
-        <p class=\"tagline\">Basics｜基础概念</p>
+        <p class=\"tagline\">{page_title}</p>
       </div>
     </div>
     <nav class=\"site-nav\">
       <a href=\"../index.html\">首页</a>
-      <a href=\"../papers.html\">Papers｜论文拆解</a>
-      <a href=\"../pathways-methods.html\">Pathways & Methods｜通路与方法区</a>
-      <a href=\"../basics.html\" class=\"active\">Basics｜基础概念</a>
-      <a href=\"../stories-evolution.html\">Stories & Evolution｜人类演化 & 疾病小随笔</a>
+{nav_html}
       <a href=\"../contact.html\">联系我</a>
     </nav>
   </header>
 
   <main class=\"content\">
-    <section class=\"hero hero-sub hero-sub--basics\">
+    <section class=\"hero hero-sub {hero_class}\">
       <div class=\"hero-copy\">
-        <span class=\"badge\">Basics</span>
-        <h1>{title}</h1>
-        <p class=\"article-detail__meta\">{meta_line}</p>
-        <a class=\"article-detail__back\" href=\"../basics.html\">← 返回基础概念列表</a>
+        <span class=\"badge\">{badge}</span>
+        <h1>{{{{title}}}}</h1>
+        <p class=\"article-detail__meta\">{{{{meta_line}}}}</p>
+        <a class=\"article-detail__back\" href=\"../{html_file}\">← 返回列表</a>
       </div>
       <div class=\"hero-illustration hero-illustration--mini\" aria-hidden=\"true\">
         <div class=\"blob blob-2\"></div>
@@ -412,7 +435,7 @@ NOTE_PAGE_TEMPLATE = """<!DOCTYPE html>
 
     <section class=\"section article-detail\">
       <article class=\"article-detail__card\">
-{body}
+{{{{body}}}}
       </article>
     </section>
   </main>
@@ -449,7 +472,8 @@ def write_note_pages(notes: List[Note]) -> None:
         body_html = note.html_body
         combined_body = meta_html + "\n" + body_html if meta_html else body_html
 
-        detail_html = NOTE_PAGE_TEMPLATE.format(
+        template = get_note_page_template(note.category)
+        detail_html = template.format(
             title=html.escape(note.title),
             meta_line=html.escape(meta_line),
             body=textwrap.indent(combined_body, "        ")
@@ -503,15 +527,37 @@ def main() -> None:
     args = parser.parse_args()
 
     notes = collect_notes()
-    article_html = build_article_html(notes)
-
+    
+    # 按 category 分组
+    notes_by_category: dict[str, List[Note]] = {}
+    for note in notes:
+        category = note.category if note.category in CATEGORY_MAP else "basics"
+        if category not in notes_by_category:
+            notes_by_category[category] = []
+        notes_by_category[category].append(note)
+    
+    # 为每个板块生成文章列表
+    for category, (html_file, _, _, _) in CATEGORY_MAP.items():
+        category_notes = notes_by_category.get(category, [])
+        article_html = build_article_html(category_notes)
+        
+        if args.dry_run:
+            print(f"\n=== {category} ===")
+            print(article_html)
+            continue
+        
+        target_file = BASE_DIR / html_file
+        if target_file.exists():
+            update_section(target_file, PLACEHOLDER_START, PLACEHOLDER_END, article_html)
+    
     if args.dry_run:
-        print(article_html)
         return
-
-    update_section(NOTES_FILE, PLACEHOLDER_START, PLACEHOLDER_END, article_html)
+    
     write_note_pages(notes)
-    print(f"已处理 {len(notes)} 篇随笔，并更新 basics.html")
+    
+    # 统计输出
+    stats = ", ".join([f"{cat}: {len(notes_by_category.get(cat, []))}" for cat in CATEGORY_MAP.keys()])
+    print(f"已处理 {len(notes)} 篇文章，按板块分布：{stats}")
 
 
 if __name__ == "__main__":

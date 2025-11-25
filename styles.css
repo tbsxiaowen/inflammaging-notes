@@ -123,22 +123,25 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
 }
 
 .site-nav {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .site-nav a {
-  padding: 0.55rem 1.15rem;
+  padding: 0.4rem 0.75rem;
   border-radius: 999px;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
   background: var(--card-bg);
   border: 2px solid #111827;
   box-shadow: 4px 4px 0 rgba(17, 24, 39, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .site-nav a:hover,
@@ -765,6 +768,8 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
 @media (max-width: 680px) {
   .site-header {
     padding: 2rem 1.25rem 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .brand h1 {
@@ -774,6 +779,14 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
   .site-nav {
     width: 100%;
     justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+
+  .site-nav a {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
   }
 
   .hero {
