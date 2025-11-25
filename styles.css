@@ -373,8 +373,14 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
 
 .highlights {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.8rem;
+}
+
+@media (max-width: 768px) {
+  .highlights {
+    grid-template-columns: 1fr;
+  }
 }
 
 .card {
@@ -395,13 +401,38 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
   pointer-events: none;
 }
 
-.card-icon {
-  font-size: 1.8rem;
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
 }
 
-.card h3 {
-  margin: 1rem 0 0.6rem;
-  font-size: 1.45rem;
+.card-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.card-title-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title-en {
+  margin: 0 0 0.3rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.card-title-cn {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-muted);
 }
 
 .card p {
