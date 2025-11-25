@@ -27,13 +27,10 @@ from typing import List
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 MARKDOWN_DIR = BASE_DIR / "markdown 文章"
-NOTES_FILE = BASE_DIR / "notes.html"
-IDEAS_FILE = BASE_DIR / "ideas.html"
+NOTES_FILE = BASE_DIR / "basics.html"
 NOTE_OUTPUT_DIR = BASE_DIR / "notes"
 PLACEHOLDER_START = "<!-- BEGIN:ARTICLE_LIST -->"
 PLACEHOLDER_END = "<!-- END:ARTICLE_LIST -->"
-IDEAS_PLACEHOLDER_START = "<!-- BEGIN:IDEA_LIST -->"
-IDEAS_PLACEHOLDER_END = "<!-- END:IDEA_LIST -->"
 
 try:
     import markdown  # type: ignore
@@ -346,12 +343,12 @@ def render_note(note: Note) -> str:
     return f"""
         <article class=\"article-card\" id=\"{html.escape(note.slug)}\">
           <header class=\"article-card__header\">
-            <h4>{html.escape(note.title)}</h4>
+            <h3>{html.escape(note.title)}</h3>
             <p class=\"article-card__meta\">{html.escape(meta_line)}</p>
           </header>
           <p class=\"article-card__summary\">{html.escape(note.summary)}</p>
           <div class=\"article-card__actions\">
-            <a class=\"article-card__link\" href=\"notes/{html.escape(note.slug)}.html\">阅读随笔</a>
+            <a class=\"article-card__link\" href=\"notes/{html.escape(note.slug)}.html\">阅读全文</a>
           </div>
         </article>""".strip()
 
@@ -363,7 +360,7 @@ def indent_lines(text: str, spaces: int) -> str:
 
 def build_article_html(notes: List[Note]) -> str:
     if not notes:
-        return "        <p class=\"empty-state\">暂时还没有随笔，欢迎稍后再来。</p>"
+        return "        <p class=\"empty-state\">暂时还没有内容，欢迎稍后再来。</p>"
 
     rendered = [textwrap.indent(render_note(note), "        ") for note in notes]
     return "\n".join(rendered)
@@ -374,7 +371,7 @@ NOTE_PAGE_TEMPLATE = """<!DOCTYPE html>
 <head>
   <meta charset=\"UTF-8\">
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-  <title>{title} - 炎症衰老研究随笔</title>
+  <title>{title} - Basics｜基础概念</title>
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
   <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap\" rel=\"stylesheet\">
@@ -386,25 +383,26 @@ NOTE_PAGE_TEMPLATE = """<!DOCTYPE html>
       <span class=\"brand-mark\">IA</span>
       <div>
         <h1>炎症衰老研究笔记</h1>
-        <p class=\"tagline\">随笔</p>
+        <p class=\"tagline\">Basics｜基础概念</p>
       </div>
     </div>
     <nav class=\"site-nav\">
       <a href=\"../index.html\">首页</a>
-      <a href=\"../papers.html\">论文精选</a>
-      <a href=\"../resources.html\">工具与资源</a>
-      <a href=\"../notes.html\" class=\"active\">随笔</a>
+      <a href=\"../papers.html\">Papers｜论文拆解</a>
+      <a href=\"../pathways-methods.html\">Pathways & Methods｜通路与方法区</a>
+      <a href=\"../basics.html\" class=\"active\">Basics｜基础概念</a>
+      <a href=\"../stories-evolution.html\">Stories & Evolution｜人类演化 & 疾病小随笔</a>
       <a href=\"../contact.html\">联系我</a>
     </nav>
   </header>
 
   <main class=\"content\">
-    <section class=\"hero hero-sub hero-sub--notes\">
+    <section class=\"hero hero-sub hero-sub--basics\">
       <div class=\"hero-copy\">
-        <span class=\"badge\">Field Notes</span>
-        <h2>{title}</h2>
+        <span class=\"badge\">Basics</span>
+        <h1>{title}</h1>
         <p class=\"article-detail__meta\">{meta_line}</p>
-        <a class=\"article-detail__back\" href=\"../notes.html\">← 返回随笔列表</a>
+        <a class=\"article-detail__back\" href=\"../basics.html\">← 返回基础概念列表</a>
       </div>
       <div class=\"hero-illustration hero-illustration--mini\" aria-hidden=\"true\">
         <div class=\"blob blob-2\"></div>
@@ -513,7 +511,7 @@ def main() -> None:
 
     update_section(NOTES_FILE, PLACEHOLDER_START, PLACEHOLDER_END, article_html)
     write_note_pages(notes)
-    print(f"已处理 {len(notes)} 篇随笔，并更新 notes.html")
+    print(f"已处理 {len(notes)} 篇随笔，并更新 basics.html")
 
 
 if __name__ == "__main__":
