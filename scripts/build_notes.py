@@ -154,28 +154,46 @@ HORIZONTAL_RULE_PATTERN = re.compile(r"^\s*([-*_])\s*\1\s*\1\s*$")
 LINK_PATTERN = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 
-def convert_links_in_text(text: str) -> str:
-    """将 Markdown 链接格式 [文本](链接) 转换为 HTML 链接，同时转义其他内容"""
+def convert_markdown_inline(text: str) -> str:
+    """将 Markdown 内联格式（链接、加粗）转换为 HTML，同时转义其他内容"""
     # 先找到所有链接并替换为占位符
     links = []
-    placeholder_pattern = "___LINK_PLACEHOLDER_{}___"
+    link_placeholder = "___LINK_PLACEHOLDER_{}___"
     
-    def replace_with_placeholder(match):
+    def replace_link_with_placeholder(match):
         link_text = match.group(1)
         link_url = match.group(2)
         links.append((link_text, link_url))
-        return placeholder_pattern.format(len(links) - 1)
+        return link_placeholder.format(len(links) - 1)
     
     # 替换链接为占位符
-    text_with_placeholders = LINK_PATTERN.sub(replace_with_placeholder, text)
+    text_with_link_placeholders = LINK_PATTERN.sub(replace_link_with_placeholder, text)
+    
+    # 处理加粗标记 **text**
+    bold_placeholders = []
+    bold_placeholder = "___BOLD_PLACEHOLDER_{}___"
+    BOLD_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
+    
+    def replace_bold_with_placeholder(match):
+        bold_text = match.group(1)
+        bold_placeholders.append(bold_text)
+        return bold_placeholder.format(len(bold_placeholders) - 1)
+    
+    # 替换加粗为占位符
+    text_with_all_placeholders = BOLD_PATTERN.sub(replace_bold_with_placeholder, text_with_link_placeholders)
     
     # 转义整个文本
-    text_escaped = html.escape(text_with_placeholders)
+    text_escaped = html.escape(text_with_all_placeholders)
     
-    # 将占位符替换回 HTML 链接
+    # 将加粗占位符替换回 HTML
+    for i, bold_text in enumerate(bold_placeholders):
+        bold_html = f"<strong>{html.escape(bold_text)}</strong>"
+        text_escaped = text_escaped.replace(bold_placeholder.format(i), bold_html)
+    
+    # 将链接占位符替换回 HTML 链接
     for i, (link_text, link_url) in enumerate(links):
         link_html = f'<a href="{html.escape(link_url)}">{html.escape(link_text)}</a>'
-        text_escaped = text_escaped.replace(placeholder_pattern.format(i), link_html)
+        text_escaped = text_escaped.replace(link_placeholder.format(i), link_html)
     
     return text_escaped
 
@@ -186,16 +204,31 @@ def simple_markdown_to_html(text: str) -> str:
     html_parts: List[str] = []
     list_stack: List[str] = []
     in_blockquote = False
+    blockquote_lines: List[str] = []
     paragraph_lines: List[str] = []
 
     def flush_paragraph() -> None:
         if paragraph_lines:
             paragraph = " ".join(paragraph_lines).strip()
             if paragraph:
-                # 处理链接并转义
-                paragraph_html = convert_links_in_text(paragraph)
+                # 处理链接、加粗并转义
+                paragraph_html = convert_markdown_inline(paragraph)
                 html_parts.append(f"<p>{paragraph_html}</p>")
             paragraph_lines.clear()
+    
+    def flush_blockquote() -> None:
+        nonlocal in_blockquote
+        if blockquote_lines:
+            # 合并所有 blockquote 行，处理跨行的加粗标记
+            blockquote_content = " ".join(blockquote_lines).strip()
+            if blockquote_content:
+                # 处理引用中的链接和加粗（支持跨行）
+                blockquote_html = convert_markdown_inline(blockquote_content)
+                html_parts.append(f"  <p>{blockquote_html}</p>")
+            blockquote_lines.clear()
+        if in_blockquote:
+            html_parts.append("</blockquote>")
+            in_blockquote = False
 
     def close_lists(to_level: int = 0) -> None:
         while len(list_stack) > to_level:
@@ -205,42 +238,43 @@ def simple_markdown_to_html(text: str) -> str:
     for raw in lines:
         line = raw.rstrip()
         if not line.strip():
-            flush_paragraph()
-            close_lists()
             if in_blockquote:
-                html_parts.append("</blockquote>")
-                in_blockquote = False
+                # blockquote 中的空行，先处理已收集的内容
+                flush_blockquote()
+            else:
+                flush_paragraph()
+            close_lists()
             continue
 
         if HORIZONTAL_RULE_PATTERN.match(line):
+            flush_blockquote()
             flush_paragraph()
             close_lists()
-            if in_blockquote:
-                html_parts.append("</blockquote>")
-                in_blockquote = False
             html_parts.append("<hr>")
             continue
 
         heading = HEADING_PATTERN.match(line)
         if heading:
+            flush_blockquote()
             flush_paragraph()
             close_lists()
-            if in_blockquote:
-                html_parts.append("</blockquote>")
-                in_blockquote = False
             level = len(heading.group(1))
             content = heading.group(2).strip()
-            html_parts.append(f"<h{level}>{html.escape(content)}</h{level}>")
+            # 处理标题中的加粗标记
+            content_html = convert_markdown_inline(content)
+            html_parts.append(f"<h{level}>{content_html}</h{level}>")
             continue
 
         blockquote = BLOCKQUOTE_PATTERN.match(line)
         if blockquote:
-            flush_paragraph()
-            close_lists()
             if not in_blockquote:
+                # 开始新的 blockquote
+                flush_paragraph()
+                close_lists()
                 html_parts.append("<blockquote>")
                 in_blockquote = True
-            html_parts.append(f"  <p>{html.escape(blockquote.group(1).strip())}</p>")
+            blockquote_text = blockquote.group(1).strip()
+            blockquote_lines.append(blockquote_text)
             continue
 
         list_match = LIST_ITEM_PATTERN.match(line)
@@ -252,17 +286,16 @@ def simple_markdown_to_html(text: str) -> str:
                 html_parts.append(f"<{list_type}>")
                 list_stack.append(list_type)
             item_text = line[list_match.end():].strip()
-            # 处理列表项中的链接
-            item_html = convert_links_in_text(item_text)
+            # 处理列表项中的链接和加粗
+            item_html = convert_markdown_inline(item_text)
             html_parts.append(f"  <li>{item_html}</li>")
             continue
 
         paragraph_lines.append(line)
 
+    flush_blockquote()
     flush_paragraph()
     close_lists()
-    if in_blockquote:
-        html_parts.append("</blockquote>")
 
     return "\n".join(html_parts)
 

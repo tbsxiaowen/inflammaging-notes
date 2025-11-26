@@ -715,8 +715,8 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
   box-shadow: 14px 14px 0 rgba(17, 24, 39, 0.18);
   display: grid;
   gap: 1.3rem;
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 0.95rem;
+  line-height: 1.6;
   color: var(--text-primary);
   max-width: var(--content-max-width);
   margin: 0 auto;
@@ -733,7 +733,7 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
 }
 
 .article-detail__card p {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1rem;
   color: var(--text-muted);
 }
 
