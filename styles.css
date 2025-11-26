@@ -29,8 +29,8 @@ body {
   font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
   background: radial-gradient(circle at top left, rgba(255, 196, 125, 0.35), transparent 55%), radial-gradient(circle at 85% 20%, rgba(112, 193, 179, 0.25), transparent 60%), var(--bg-main);
   color: var(--text-primary);
-  line-height: 1.75;
-  font-size: 1.05rem;
+  line-height: 1.55;
+  font-size: 0.96rem;
   min-height: 100vh;
 }
 
@@ -715,8 +715,8 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
   box-shadow: 14px 14px 0 rgba(17, 24, 39, 0.18);
   display: grid;
   gap: 1.3rem;
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.92rem;
+  line-height: 1.5;
   color: var(--text-primary);
   max-width: var(--content-max-width);
   margin: 0 auto;
@@ -728,18 +728,36 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
 .article-detail__card h4,
 .article-detail__card h5,
 .article-detail__card h6 {
-  margin: 1.2rem 0 0.6rem;
-  line-height: 1.3;
+  margin: 0.85rem 0 0.35rem;
+  line-height: 1.2;
+}
+
+.article-detail__card h1 {
+  font-size: clamp(1.85rem, 2.8vw, 2.1rem);
+}
+
+.article-detail__card h2 {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+.article-detail__card h3 {
+  font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+}
+
+.article-detail__card h4,
+.article-detail__card h5,
+.article-detail__card h6 {
+  font-size: clamp(0.98rem, 1.6vw, 1.1rem);
 }
 
 .article-detail__card p {
-  margin: 0 0 1rem;
+  margin: 0 0 0.6rem;
   color: var(--text-muted);
 }
 
 .article-detail__card ul,
 .article-detail__card ol {
-  margin: 0;
+  margin: 0 0 0.6rem;
   padding-left: 1.2rem;
   color: var(--text-muted);
 }

@@ -1,102 +1,96 @@
 ---
-title: 古基因如何影响现代疾病？
-date: 2025-10-07
-tags: [Archaic Introgression, Immunity, Evolution]
+title: 古基因如何影响现代疾病？——从 introgression 到现代疾病机制的系统解析
+date: 2025-02-01
+tags: [Archaic Introgression, Positive Selection, Immunogenetics, GWAS]
 category: papers
 ---
 
 # 古基因如何影响现代疾病？
-*How Archaic Introgression Shapes Modern Human Disease Traits*
+*How Archaic Introgression Reshaped Modern Human Disease Risk*
 
-大约 5–6 万年前，早期现代人类离开非洲并与尼安德特人、丹尼索瓦人发生基因交流（introgression）。  
-今天，我们每个人体内依然保留约 **1–2% 的尼安德特基因**，以及在某些人群中较高比例的丹尼索瓦基因。
+现代人基因组中约 1–2% 的序列来自尼安德特人，部分人群还携带丹尼索瓦人来源的片段（最高可超过 4%）。这些 introgressed 片段并不是遗迹，而是：
 
-这些古老片段依然深刻影响着现代健康。
+- 被正选择保留的适应性片段  
+- 被现代环境放大的疾病风险  
+- 在不同人群中形成 allele frequency clines  
+- 参与免疫、代谢与神经系统的调控  
 
----
-
-## 1. 什么是 archaic introgression？
-Introgression 指古代人群之间的基因交流，使得现代人类携带祖先以外来源的遗传片段。
-
-它们影响：
-
-- 免疫系统  
-- 脂肪代谢  
-- 炎症通路  
-- 病原感受  
-- 氧气利用（高原适应）  
+本篇文章结合 Sankararaman 2014、Prüfer 2017、Vernot 2016、Racimo 2017、Villanea & Schraiber 2019 等关键文献，系统分析古基因如何参与现代疾病。
 
 ---
 
-## 2. 关键 introgressed 基因示例（文献拆解）
+## 1. Introgression 的四类命运
+文献中常见的 introgressed 变异可归类为：
 
-### **① OAS 基因簇（抗病毒机制）**
-来源于尼安德特人。  
-功能：
+### （1）adaptive introgression（适应性流入）  
+显著提高适应度，被正选择富集，例如 EPAS1 高原适应。
 
-- 增强抗 RNA 病毒能力  
-- 与 SARS-CoV-2 重症风险相关  
+### （2）nearly-neutral introgression（近中性）  
+大部分片段属于这一类。
 
-属于典型拮抗多效性：  
-**抗病毒强 → 炎症活性高。**
+### （3）deleterious introgression（有害）  
+会被 purifying selection 清除。现代人中尼安德特片段在着丝粒、X 染色体以及与雄性生育相关基因附近明显减少，符合杂交不相容模型。
 
----
-
-### **② TLR1/6/10（先天免疫传感器）**
-这些变异帮助古代人类：
-
-- 快速识别病原体  
-- 激活强烈炎症反应  
-
-但在现代，与风险增加相关：
-
-- 哮喘  
-- 过敏  
-- 慢性炎症性皮肤病  
+### （4）环境改变后 liability 增加  
+在现代环境中成为疾病风险，例如免疫增强基因在寄生虫稀缺的今天转化为慢性炎症风险。
 
 ---
 
-### **③ HLA 基因（抗原呈递）**
-HLA 区域多次从尼安德特人处 introgressed。  
-优点：
+## 2. 免疫相关的 adaptive introgression
+免疫系统是 introgression 最富集的功能类别。
 
-- 提高对多类病原的识别能力  
+### OAS1–OAS3 基因簇  
+作用：抗 RNA 病毒；来源：尼安德特人；现代表现：在 COVID-19 中影响重症风险（Zhou et al. 2021），体现 IFN 通路驱动的超炎症。
 
-代价：
+### TLR1/6/10（先天免疫感受器）  
+在欧洲人群 introgression 频率高，参与细菌识别。现代则增加过敏、皮肤炎症和自身免疫疾病，呈现明显的人群频率梯度。
 
-- 自身免疫风险更高  
-
----
-
-### **④ EPAS1（丹尼索瓦来源）**
-藏族高原适应的关键基因。  
-说明 introgression 对人类适应性有重大影响。
+### HLA 区域的 balancing selection  
+该区域多次发生 introgression。多样性带来病原识别优势，但代价是自身免疫风险（RA、T1D 等）升高。
 
 ---
 
-## 3. 为什么古基因在现代变成疾病风险？
-因为环境变化太快：
+## 3. Introgression 与代谢、慢性炎症
 
-- 病原压力降低  
-- 饮食变化巨大  
-- 压力系统长期激活  
-- 寄生虫负担骤减  
+### 脂肪代谢  
+部分 introgressed 等位基因与脂肪沉积、胰岛素抵抗、寒冷适应相关（Zeberg & Prüfer 2020）。
 
-古代的“高反应免疫系统”在现代变成了负担：
-
-- 慢性炎症  
-- 自身免疫  
-- 抑郁（炎症通路参与）  
-- 新冠重症反应  
-- 肥胖与代谢疾病  
+### 炎症调控  
+尼安德特来源的 enhancer 参与 IFN pathway、IL-6/STAT3、NF-κB 等通路。古代强免疫是优势，现代则转化为 inflammaging 的代价。
 
 ---
 
-## 4. 古基因提供了理解疾病的关键线索
-演化视角揭示：
+## 4. Introgression 在不同人群中的差异
+古基因在现代人群中的分布呈现明显的分层：
 
-> **现代疾病不是异常，而是延续。  
-> 是古代选择压力与现代生活方式之间的权衡。**
+- 欧洲：尼安德特片段频率较高  
+- 东亚：introgression 总量更高，可能经历二次 introgression  
+- 南亚：丹尼索瓦片段显著  
+- 美洲：通过北亚祖先继承  
+
+这种结构化分布解释了 GWAS 中人群特异性疾病风险的遗传基础。
+
+---
+
+## 5. Modern disease = ancient adaptation × modern mismatch
+以免疫系统为例：
+
+- 古基因增强对细菌与寄生虫的反应  
+- 现代寄生虫极少，使免疫系统缺乏训练，反应变得过度  
+- 导致哮喘、花粉过敏、自身免疫、慢性炎症、COVID-19 超炎症风暴  
+
+这是一条可测量、可建模的演化路径：古代适应叠加现代错配，形成疾病风险。
+
+---
+
+# 结论
+古基因不是失效遗迹，而是：
+
+- 人类演化史的功能性产物  
+- 人群疾病差异的基因组基础  
+- 演化医学理解疾病的关键证据  
+
+理解 introgression，就是理解现代疾病的根源。
 
 ---
 
