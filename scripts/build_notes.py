@@ -151,10 +151,37 @@ LIST_ITEM_PATTERN = re.compile(r"^\s*([*+-]|\d+[.)])\s+")
 HEADING_PATTERN = re.compile(r"^(#{1,6})\s+(.*)$")
 BLOCKQUOTE_PATTERN = re.compile(r"^>\s?(.*)$")
 HORIZONTAL_RULE_PATTERN = re.compile(r"^\s*([-*_])\s*\1\s*\1\s*$")
+LINK_PATTERN = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+
+
+def convert_links_in_text(text: str) -> str:
+    """将 Markdown 链接格式 [文本](链接) 转换为 HTML 链接，同时转义其他内容"""
+    # 先找到所有链接并替换为占位符
+    links = []
+    placeholder_pattern = "___LINK_PLACEHOLDER_{}___"
+    
+    def replace_with_placeholder(match):
+        link_text = match.group(1)
+        link_url = match.group(2)
+        links.append((link_text, link_url))
+        return placeholder_pattern.format(len(links) - 1)
+    
+    # 替换链接为占位符
+    text_with_placeholders = LINK_PATTERN.sub(replace_with_placeholder, text)
+    
+    # 转义整个文本
+    text_escaped = html.escape(text_with_placeholders)
+    
+    # 将占位符替换回 HTML 链接
+    for i, (link_text, link_url) in enumerate(links):
+        link_html = f'<a href="{html.escape(link_url)}">{html.escape(link_text)}</a>'
+        text_escaped = text_escaped.replace(placeholder_pattern.format(i), link_html)
+    
+    return text_escaped
 
 
 def simple_markdown_to_html(text: str) -> str:
-    """极简 Markdown 解析器，覆盖标题、引用、列表、段落。"""
+    """极简 Markdown 解析器，覆盖标题、引用、列表、段落、链接。"""
     lines = text.splitlines()
     html_parts: List[str] = []
     list_stack: List[str] = []
@@ -165,7 +192,9 @@ def simple_markdown_to_html(text: str) -> str:
         if paragraph_lines:
             paragraph = " ".join(paragraph_lines).strip()
             if paragraph:
-                html_parts.append(f"<p>{html.escape(paragraph)}</p>")
+                # 处理链接并转义
+                paragraph_html = convert_links_in_text(paragraph)
+                html_parts.append(f"<p>{paragraph_html}</p>")
             paragraph_lines.clear()
 
     def close_lists(to_level: int = 0) -> None:
@@ -223,7 +252,9 @@ def simple_markdown_to_html(text: str) -> str:
                 html_parts.append(f"<{list_type}>")
                 list_stack.append(list_type)
             item_text = line[list_match.end():].strip()
-            html_parts.append(f"  <li>{html.escape(item_text)}</li>")
+            # 处理列表项中的链接
+            item_html = convert_links_in_text(item_text)
+            html_parts.append(f"  <li>{item_html}</li>")
             continue
 
         paragraph_lines.append(line)
@@ -392,56 +423,57 @@ def get_note_page_template(category: str) -> str:
         nav_links.append(f'      <a href="../{hf}"{active}>{pt}</a>')
     nav_html = "\n".join(nav_links)
     
-    return f"""<!DOCTYPE html>
-<html lang=\"zh-CN\">
+    # 使用普通字符串模板，避免 f-string 转义问题
+    template_str = """<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta charset=\"UTF-8\">
-  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-  <title>{{{{title}}}} - {page_title}</title>
-  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
-  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-  <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap\" rel=\"stylesheet\">
-  <link rel=\"stylesheet\" href=\"../styles.css\">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} - {page_title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-  <header class=\"site-header\">
-    <div class=\"brand\">
-      <span class=\"brand-mark\">IA</span>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">IA</span>
       <div>
         <h1>炎症衰老研究笔记</h1>
-        <p class=\"tagline\">{page_title}</p>
+        <p class="tagline">{page_title}</p>
       </div>
     </div>
-    <nav class=\"site-nav\">
-      <a href=\"../index.html\">首页</a>
+    <nav class="site-nav">
+      <a href="../index.html">首页</a>
 {nav_html}
-      <a href=\"../contact.html\">联系我</a>
+      <a href="../contact.html">联系我</a>
     </nav>
   </header>
 
-  <main class=\"content\">
-    <section class=\"hero hero-sub {hero_class}\">
-      <div class=\"hero-copy\">
-        <span class=\"badge\">{badge}</span>
-        <h1>{{{{title}}}}</h1>
-        <p class=\"article-detail__meta\">{{{{meta_line}}}}</p>
-        <a class=\"article-detail__back\" href=\"../{html_file}\">← 返回列表</a>
+  <main class="content">
+    <section class="hero hero-sub {hero_class}">
+      <div class="hero-copy">
+        <span class="badge">{badge}</span>
+        <h1>{title}</h1>
+        <p class="article-detail__meta">{meta_line}</p>
+        <a class="article-detail__back" href="../{html_file}">← 返回列表</a>
       </div>
-      <div class=\"hero-illustration hero-illustration--mini\" aria-hidden=\"true\">
-        <div class=\"blob blob-2\"></div>
-        <div class=\"spark spark-3\"></div>
+      <div class="hero-illustration hero-illustration--mini" aria-hidden="true">
+        <div class="blob blob-2"></div>
+        <div class="spark spark-3"></div>
       </div>
     </section>
 
-    <section class=\"section article-detail\">
-      <article class=\"article-detail__card\">
-{{{{body}}}}
+    <section class="section article-detail">
+      <article class="article-detail__card">
+{body}
       </article>
     </section>
   </main>
 
-  <footer class=\"site-footer\">
-    <p>© <span id=\"year\"></span> 炎症衰老研究笔记</p>
+  <footer class="site-footer">
+    <p>© <span id="year"></span> 炎症衰老研究笔记</p>
   </footer>
 
   <script>
@@ -450,6 +482,17 @@ def get_note_page_template(category: str) -> str:
 </body>
 </html>
 """
+    # 先替换 f-string 变量
+    return template_str.format(
+        page_title=page_title,
+        hero_class=hero_class,
+        badge=badge,
+        html_file=html_file,
+        nav_html=nav_html,
+        title="{title}",
+        meta_line="{meta_line}",
+        body="{body}"
+    )
 
 
 def write_note_pages(notes: List[Note]) -> None:
