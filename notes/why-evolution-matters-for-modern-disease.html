@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} - Basics｜基础概念</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">IA</span>
+      <div>
+        <h1>炎症衰老研究笔记</h1>
+        <p class="tagline">Basics｜基础概念</p>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="../index.html">首页</a>
+      <a href="../basics.html" class="active">Basics｜基础概念</a>
+      <a href="../papers.html">Papers｜论文拆解</a>
+      <a href="../pathways-methods.html">Pathways & Methods｜通路与方法区</a>
+      <a href="../stories-evolution.html">Stories & Evolution｜人类演化 & 疾病小随笔</a>
+      <a href="../contact.html">联系我</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="hero hero-sub hero-sub--basics">
+      <div class="hero-copy">
+        <span class="badge">Basics</span>
+        <h1>{title}</h1>
+        <p class="article-detail__meta">{meta_line}</p>
+        <a class="article-detail__back" href="../basics.html">← 返回列表</a>
+      </div>
+      <div class="hero-illustration hero-illustration--mini" aria-hidden="true">
+        <div class="blob blob-2"></div>
+        <div class="spark spark-3"></div>
+      </div>
+    </section>
+
+    <section class="section article-detail">
+      <article class="article-detail__card">
+{body}
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> 炎症衰老研究笔记</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

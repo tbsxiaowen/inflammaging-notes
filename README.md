@@ -6,44 +6,56 @@
 
 ```text
 inflammaging_site/
-├── index.html           # 首页
-├── papers.html          # 论文精选
-├── resources.html       # 工具与资源
-├── contact.html         # 联系方式
-├── notes.html           # 随笔列表（自动生成）
-├── notes/               # 随笔详情页（自动生成）
+├── index.html               # 首页
+├── papers.html              # Papers｜论文拆解
+├── pathways-methods.html    # Pathways & Methods｜通路与方法区
+├── basics.html              # Basics｜基础概念（由脚本生成）
+├── stories-evolution.html   # Stories & Evolution｜人类演化 & 疾病小随笔
+├── notes/                   # 文章详情页（脚本生成）
 │   └── *.html
-├── markdown 文章/       # Markdown 随笔原稿
+├── markdown 文章/           # Markdown 原稿
 │   └── *.markdown
 ├── scripts/
-│   └── build_notes.py   # 构建脚本
-├── styles.css           # 全站样式
+│   └── build_notes.py       # 构建脚本
+├── styles.css               # 全站样式
 └── README.md
 ```
 
 ## 写作与构建流程
 
-1. 在 `markdown 文章/` 下新增或编辑 `.md/.markdown` 文件，建议使用以下元信息格式：
+1. **撰写 Markdown 内容**
+   - 在 `markdown 文章/` 目录新增 `.markdown` 文件。
+   - 开头添加 front matter，务必指明 `category`（决定文章出现在哪个板块）：
    ```markdown
    ---
    title: 生存压力导致慢性炎症和衰老？
    date: 2025-11-11
    tags: [Inflammaging, 灵感笔记]
+   category: basics   # 可选：basics / papers / pathways / stories
    ---
    
    ## 小节标题
    - 要点 1
    - 要点 2
    ```
-   若不写 front matter，也可使用现有的“标题 + 引用块”格式，脚本会自动解析。
+   - `category` 对应关系：
+     | category 值 | 页面 |
+     | --- | --- |
+     | `basics` | Basics｜基础概念 |
+     | `papers` | Papers｜论文拆解 |
+     | `pathways` | Pathways & Methods｜通路与方法区 |
+     | `stories` | Stories & Evolution｜人类演化 & 疾病小随笔 |
+   - 其余内容直接写 Markdown 正文即可。
 
-2. 在项目根目录执行构建脚本，让随笔列表与详情页保持最新：
+2. **生成页面**
+   在项目根目录执行脚本，让列表页与详情页保持最新：
    ```bash
    python3 scripts/build_notes.py
    ```
-   运行后会在终端看到 `已处理 X 篇随笔，并更新 notes.html` 的提示。
+   运行后会在终端看到 `已处理 X 篇文章，按板块分布：...` 的提示。
 
-3. 本地预览任意 `.html` 文件（直接用浏览器打开），确认样式和内容正常，再进行 Git 提交与推送：
+3. **预览与提交**
+   本地用浏览器打开任意 `.html` 文件确认样式无误，然后提交：
    ```bash
    git add .
    git commit -m "Update notes"
