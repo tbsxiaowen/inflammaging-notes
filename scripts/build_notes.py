@@ -380,19 +380,25 @@ def build_article_html(notes: List[Note]) -> str:
     return "\n".join(rendered)
 
 
-def get_note_page_template(category: str) -> str:
-    """根据 category 生成对应的详情页模板"""
-    category_info = CATEGORY_MAP.get(category, CATEGORY_MAP["basics"])
-    html_file, page_title, hero_class, badge = category_info
-    
-    # 生成导航链接，当前 category 的链接添加 active 类
+def render_note_detail_page(note: Note, combined_body_html: str, meta_line: str) -> str:
+    """渲染文章详情页 HTML"""
+    category = note.category if note.category in CATEGORY_MAP else "basics"
+    html_file, page_title, hero_class, badge = CATEGORY_MAP[category]
+
+    nav_config = [
+        ("../index.html", "首页", None),
+        ("../papers.html", CATEGORY_MAP["papers"][1], "papers"),
+        ("../pathways-methods.html", CATEGORY_MAP["pathways"][1], "pathways"),
+        ("../basics.html", CATEGORY_MAP["basics"][1], "basics"),
+        ("../stories-evolution.html", CATEGORY_MAP["stories"][1], "stories"),
+        ("../contact.html", "联系我", None),
+    ]
     nav_links = []
-    for cat, (cat_file, cat_title, _, _) in CATEGORY_MAP.items():
-        active_class = ' class="active"' if cat == category else ''
-        nav_links.append(f'      <a href="../{cat_file}"{active_class}>{cat_title}</a>')
-    nav_html = '\n'.join(nav_links)
-    
-    # 返回链接文本
+    for href, label, key in nav_config:
+        active_class = ' class="active"' if key == category else ""
+        nav_links.append(f'      <a href="{href}"{active_class}>{label}</a>')
+    nav_html = "\n".join(nav_links)
+
     back_text_map = {
         "basics": "← 返回基础概念列表",
         "papers": "← 返回论文拆解列表",
@@ -400,14 +406,15 @@ def get_note_page_template(category: str) -> str:
         "stories": "← 返回人类演化 & 疾病小随笔列表",
     }
     back_text = back_text_map.get(category, "← 返回列表")
-    
-    # 使用双大括号转义占位符，这样 format() 才能正确替换
+
+    body_indented = textwrap.indent(combined_body_html.strip(), "        ")
+
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{{{title}}}} - {page_title}</title>
+  <title>{html.escape(note.title)} - {page_title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -423,9 +430,7 @@ def get_note_page_template(category: str) -> str:
       </div>
     </div>
     <nav class="site-nav">
-      <a href="../index.html">首页</a>
 {nav_html}
-      <a href="../contact.html">联系我</a>
     </nav>
   </header>
 
@@ -433,8 +438,8 @@ def get_note_page_template(category: str) -> str:
     <section class="hero hero-sub {hero_class}">
       <div class="hero-copy">
         <span class="badge">{badge}</span>
-        <h1>{{{{title}}}}</h1>
-        <p class="article-detail__meta">{{{{meta_line}}}}</p>
+        <h1>{html.escape(note.title)}</h1>
+        <p class="article-detail__meta">{html.escape(meta_line)}</p>
         <a class="article-detail__back" href="../{html_file}">{back_text}</a>
       </div>
       <div class="hero-illustration hero-illustration--mini" aria-hidden="true">
@@ -445,7 +450,7 @@ def get_note_page_template(category: str) -> str:
 
     <section class="section article-detail">
       <article class="article-detail__card">
-{{{{body}}}}
+{body_indented}
       </article>
     </section>
   </main>
@@ -481,13 +486,7 @@ def write_note_pages(notes: List[Note]) -> None:
         meta_html = "\n".join(f"<p class=\"article-detail__meta\">{line}</p>" for line in meta_lines)
         body_html = note.html_body
         combined_body = meta_html + "\n" + body_html if meta_html else body_html
-
-        template_str = get_note_page_template(note.category)
-        detail_html = template_str.format(
-            title=html.escape(note.title),
-            meta_line=html.escape(meta_line),
-            body=textwrap.indent(combined_body, "        ")
-        )
+        detail_html = render_note_detail_page(note, combined_body, meta_line)
         detail_path.write_text(detail_html, encoding="utf-8")
 
     for stale in existing - current:

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title} - Pathways & Methods｜通路与方法区</title>
+  <title>hUSI 是如何判断细胞衰老的？——从 OCLR 到 GMM 的全流程解读 - Pathways & Methods｜通路与方法区</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -20,9 +20,9 @@
     </div>
     <nav class="site-nav">
       <a href="../index.html">首页</a>
-      <a href="../basics.html">Basics｜基础概念</a>
       <a href="../papers.html">Papers｜论文拆解</a>
       <a href="../pathways-methods.html" class="active">Pathways & Methods｜通路与方法区</a>
+      <a href="../basics.html">Basics｜基础概念</a>
       <a href="../stories-evolution.html">Stories & Evolution｜人类演化 & 疾病小随笔</a>
       <a href="../contact.html">联系我</a>
     </nav>
@@ -32,8 +32,8 @@
     <section class="hero hero-sub hero-sub--pathways">
       <div class="hero-copy">
         <span class="badge">Pathways</span>
-        <h1>{title}</h1>
-        <p class="article-detail__meta">{meta_line}</p>
+        <h1>hUSI 是如何判断细胞衰老的？——从 OCLR 到 GMM 的全流程解读</h1>
+        <p class="article-detail__meta">2025-10-12 · Cellular Senescence，Transcriptomics，OCLR，hUSI</p>
         <a class="article-detail__back" href="../pathways-methods.html">← 返回通路与方法区列表</a>
       </div>
       <div class="hero-illustration hero-illustration--mini" aria-hidden="true">
@@ -44,7 +44,147 @@
 
     <section class="section article-detail">
       <article class="article-detail__card">
-{body}
+        <p class="article-detail__meta">日期：2025-10-12</p>
+        <p class="article-detail__meta">标签：Cellular Senescence、Transcriptomics、OCLR、hUSI</p>
+        <h1>hUSI 是如何判断细胞衰老的？</h1>
+        <p>从 OCLR 到 GMM 的全流程解读（初学者友好版）</p>
+        <p>细胞衰老（cellular senescence, CS）是衰老与疾病的核心驱动力，但传统鉴定方式（形态学、SA-β-Gal、p16/p21 等）在体内极其不稳定，且不同衰老类型之间差异巨大。</p>
+        <p>因此，开发一个跨细胞类型、跨条件、跨测序平台的通用衰老指数一直是该领域的难题。</p>
+        <p>2025 年，倪挺团队在 Nature Aging 提出了</p>
+        <h1>hUSI（human Universal Senescence Index）</h1>
+        <p>一个完全基于转录组、可广泛适用的通用衰老评分模型。</p>
+        <p>本文尝试以初学者也能掌握的方式，把论文的核心逻辑拆开讲清楚。</p>
+        <hr>
+        <h1>1. hUSI 解决了什么问题？</h1>
+        <h3>✔ 传统衰老标志物太不稳定</h3>
+        <p>不同诱导方式（复制压力、辐射、化疗药物、癌基因激活）对应的基因变化完全不同。</p>
+        <h3>✔ 不同细胞类型差异巨大</h3>
+        <p>成纤维细胞 vs 上皮细胞 vs 免疫细胞 —— 表型完全不一样。</p>
+        <h3>✔ 单一 marker 不能普适</h3>
+        <p>几乎没有一个基因能在所有类型的衰老模型中都上调。</p>
+        <p>因此领域需要一个：</p>
+        <ul>
+          <li>不依赖单一基因</li>
+          <li>能从海量数据中学习到共同的衰老表达模式</li>
+          <li>能跨平台（bulk / scRNA）</li>
+          <li>能跨细胞类型</li>
+          <li>能跨诱导条件</li>
+        </ul>
+        <p>的工具。</p>
+        <blockquote>
+          <p>hUSI 做的事情，就是定义衰老的共性表达模式。</p>
+        </blockquote>
+        <hr>
+        <h1>2. 训练数据：目前最全的衰老转录组数据集</h1>
+        <p>倪挺团队手动整理了：</p>
+        <ul>
+          <li>73 项衰老研究</li>
+          <li>34 种细胞类型</li>
+          <li>13 类衰老诱导方式</li>
+          <li>770 个转录组样本</li>
+        </ul>
+        <p>这是迄今为止最全面的细胞衰老学习集（bulk RNA-seq）。</p>
+        <blockquote>
+          <p>hUSI 的强大根源，不是算法，而是它的训练数据比任何人都大、都干净、都全面。</p>
+        </blockquote>
+        <hr>
+        <h1>3. 模型核心：One-Class Logistic Regression（OCLR）</h1>
+        <p>这是 hUSI 的关键技术点。</p>
+        <h3>为什么不用普通二分类模型？</h3>
+        <p>因为不同研究中的非衰老对照组差异巨大：</p>
+        <ul>
+          <li>生长状态不同</li>
+          <li>批次效应大</li>
+          <li>细胞类型不一致</li>
+          <li>染色体损伤背景不同</li>
+        </ul>
+        <p>直接用衰老 vs 非衰老去学，会被非衰老组的噪声严重污染模型。</p>
+        <hr>
+        <h2>hUSI 的关键创新</h2>
+        <h1>只学习衰老细胞本身的表达特征</h1>
+        <p>OCLR 是一种非常适合只有正样本的模型：</p>
+        <ul>
+          <li>输入：所有衰老样本</li>
+          <li>输出：学习衰老共同特征的向量</li>
+        </ul>
+        <p>因此模型只捕获衰老的本质表达模式，不会被不同实验条件下的非衰老噪声干扰。</p>
+        <p>这就是 hUSI 泛化能力强的核心原因。</p>
+        <hr>
+        <h1>4. 如何对一个样本计算 hUSI？</h1>
+        <p>hUSI 不是一个分类器，它生成的是：</p>
+        <h1>一个连续值（0–1），表示衰老程度</h1>
+        <p>计算方式：</p>
+        <ol>
+          <li>取样本的表达谱</li>
+          <li>计算它与衰老特征向量的 Spearman 相关系数</li>
+          <li>将相关度归一化到 0–1 区间</li>
+        </ol>
+        <p>相关度越高 → 越像衰老表达模式 → hUSI 越大。</p>
+        <hr>
+        <h1>5. 如何把连续 hUSI 值分成类别？</h1>
+        <p>论文提出了两种阈值策略：</p>
+        <hr>
+        <h2>（1）SSE（二分类，适合只有衰老 vs 非衰老两类的场景）</h2>
+        <p>SSE（Sum of Square Error）是单维数据最稳定的二聚类方法：</p>
+        <ul>
+          <li>尝试把 hUSI 划分成两组</li>
+          <li>选取组内方差最小的切点</li>
+        </ul>
+        <p>得到最佳的衰老 vs 非衰老阈值。</p>
+        <p>适用于：</p>
+        <ul>
+          <li>体外诱导衰老模型</li>
+          <li>经典处理 vs 对照数据</li>
+        </ul>
+        <hr>
+        <h2>（2）GMM（适合存在中间衰老状态的数据）</h2>
+        <p>Gaussian Mixture Model 能自动识别不同程度的衰老群体。</p>
+        <p>适用于：</p>
+        <ul>
+          <li>单细胞数据</li>
+          <li>肿瘤微环境（高异质性）</li>
+          <li>多诱导条件</li>
+        </ul>
+        <hr>
+        <h1>6. 为什么 hUSI 比其他 30 多个衰老评分都强？</h1>
+        <p>论文做了系统比较，hUSI 在：</p>
+        <ul>
+          <li>准确性</li>
+          <li>稳定性</li>
+          <li>跨细胞类型泛化</li>
+          <li>抗噪声能力</li>
+          <li>生物学可解释性</li>
+        </ul>
+        <p>都显著优于其他方法。</p>
+        <p>最震撼的验证结果：</p>
+        <blockquote>
+          <p>hUSI 鉴定出的前 10 个候选调控基因，有 8 个在实验中被证实真的能诱导衰老。</p>
+        </blockquote>
+        <p>这说明模型确实抓住了衰老的生物学本质。</p>
+        <hr>
+        <h1>7. hUSI 的实际应用案例</h1>
+        <h3>✔ COVID-19：病毒感染后不同细胞类型的衰老程度</h3>
+        <ul>
+          <li>T/NK 细胞、上皮细胞衰老显著提升</li>
+          <li>与严重程度相关</li>
+        </ul>
+        <h3>✔ 黑色素瘤：找到对预后有利的衰老肿瘤细胞</h3>
+        <ul>
+          <li>某些衰老肿瘤细胞通过特定通讯模式改善免疫浸润</li>
+        </ul>
+        <p>这些真实案例证明，hUSI 能做的不只是评分，它还能带来全新的生物学洞见。</p>
+        <hr>
+        <h1>8. 如何使用 hUSI（初学者跑得动版本）</h1>
+        <p>安装步骤写得非常明白：</p>
+        <p>```r</p>
+        <h1>克隆项目</h1>
+        <p>git clone git@github.com:WJPina/HUSI.git</p>
+        <h1>需要的 R 包</h1>
+        <p>library(Seurat) library(mclust) library(dplyr) library(ggplot2) library(pROC)</p>
+        <h1>计算 hUSI</h1>
+        <p>source(&#x27;R/hUSI.R&#x27;) husi_score &lt;- calculate_hUSI(expr_matrix) ```</p>
+        <hr>
+        <p>若同样关心炎症 × 老化 × 演化的研究议题，欢迎[留言](../contact.html)，一起讨论学习。</p>
       </article>
     </section>
   </main>
