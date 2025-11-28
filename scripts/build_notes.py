@@ -151,84 +151,22 @@ LIST_ITEM_PATTERN = re.compile(r"^\s*([*+-]|\d+[.)])\s+")
 HEADING_PATTERN = re.compile(r"^(#{1,6})\s+(.*)$")
 BLOCKQUOTE_PATTERN = re.compile(r"^>\s?(.*)$")
 HORIZONTAL_RULE_PATTERN = re.compile(r"^\s*([-*_])\s*\1\s*\1\s*$")
-LINK_PATTERN = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
-
-
-def convert_markdown_inline(text: str) -> str:
-    """将 Markdown 内联格式（链接、加粗）转换为 HTML，同时转义其他内容"""
-    # 先找到所有链接并替换为占位符
-    links = []
-    link_placeholder = "___LINK_PLACEHOLDER_{}___"
-    
-    def replace_link_with_placeholder(match):
-        link_text = match.group(1)
-        link_url = match.group(2)
-        links.append((link_text, link_url))
-        return link_placeholder.format(len(links) - 1)
-    
-    # 替换链接为占位符
-    text_with_link_placeholders = LINK_PATTERN.sub(replace_link_with_placeholder, text)
-    
-    # 处理加粗标记 **text**
-    bold_placeholders = []
-    bold_placeholder = "___BOLD_PLACEHOLDER_{}___"
-    BOLD_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
-    
-    def replace_bold_with_placeholder(match):
-        bold_text = match.group(1)
-        bold_placeholders.append(bold_text)
-        return bold_placeholder.format(len(bold_placeholders) - 1)
-    
-    # 替换加粗为占位符
-    text_with_all_placeholders = BOLD_PATTERN.sub(replace_bold_with_placeholder, text_with_link_placeholders)
-    
-    # 转义整个文本
-    text_escaped = html.escape(text_with_all_placeholders)
-    
-    # 将加粗占位符替换回 HTML
-    for i, bold_text in enumerate(bold_placeholders):
-        bold_html = f"<strong>{html.escape(bold_text)}</strong>"
-        text_escaped = text_escaped.replace(bold_placeholder.format(i), bold_html)
-    
-    # 将链接占位符替换回 HTML 链接
-    for i, (link_text, link_url) in enumerate(links):
-        link_html = f'<a href="{html.escape(link_url)}">{html.escape(link_text)}</a>'
-        text_escaped = text_escaped.replace(link_placeholder.format(i), link_html)
-    
-    return text_escaped
 
 
 def simple_markdown_to_html(text: str) -> str:
-    """极简 Markdown 解析器，覆盖标题、引用、列表、段落、链接。"""
+    """极简 Markdown 解析器，覆盖标题、引用、列表、段落。"""
     lines = text.splitlines()
     html_parts: List[str] = []
     list_stack: List[str] = []
     in_blockquote = False
-    blockquote_lines: List[str] = []
     paragraph_lines: List[str] = []
 
     def flush_paragraph() -> None:
         if paragraph_lines:
             paragraph = " ".join(paragraph_lines).strip()
             if paragraph:
-                # 处理链接、加粗并转义
-                paragraph_html = convert_markdown_inline(paragraph)
-                html_parts.append(f"<p>{paragraph_html}</p>")
+                html_parts.append(f"<p>{html.escape(paragraph)}</p>")
             paragraph_lines.clear()
-    
-    def flush_blockquote() -> None:
-        nonlocal in_blockquote
-        if blockquote_lines:
-            # 合并所有 blockquote 行，处理跨行的加粗标记
-            blockquote_content = " ".join(blockquote_lines).strip()
-            if blockquote_content:
-                # 处理引用中的链接和加粗（支持跨行）
-                blockquote_html = convert_markdown_inline(blockquote_content)
-                html_parts.append(f"  <p>{blockquote_html}</p>")
-            blockquote_lines.clear()
-        if in_blockquote:
-            html_parts.append("</blockquote>")
-            in_blockquote = False
 
     def close_lists(to_level: int = 0) -> None:
         while len(list_stack) > to_level:
@@ -238,43 +176,42 @@ def simple_markdown_to_html(text: str) -> str:
     for raw in lines:
         line = raw.rstrip()
         if not line.strip():
-            if in_blockquote:
-                # blockquote 中的空行，先处理已收集的内容
-                flush_blockquote()
-            else:
-                flush_paragraph()
+            flush_paragraph()
             close_lists()
+            if in_blockquote:
+                html_parts.append("</blockquote>")
+                in_blockquote = False
             continue
 
         if HORIZONTAL_RULE_PATTERN.match(line):
-            flush_blockquote()
             flush_paragraph()
             close_lists()
+            if in_blockquote:
+                html_parts.append("</blockquote>")
+                in_blockquote = False
             html_parts.append("<hr>")
             continue
 
         heading = HEADING_PATTERN.match(line)
         if heading:
-            flush_blockquote()
             flush_paragraph()
             close_lists()
+            if in_blockquote:
+                html_parts.append("</blockquote>")
+                in_blockquote = False
             level = len(heading.group(1))
             content = heading.group(2).strip()
-            # 处理标题中的加粗标记
-            content_html = convert_markdown_inline(content)
-            html_parts.append(f"<h{level}>{content_html}</h{level}>")
+            html_parts.append(f"<h{level}>{html.escape(content)}</h{level}>")
             continue
 
         blockquote = BLOCKQUOTE_PATTERN.match(line)
         if blockquote:
+            flush_paragraph()
+            close_lists()
             if not in_blockquote:
-                # 开始新的 blockquote
-                flush_paragraph()
-                close_lists()
                 html_parts.append("<blockquote>")
                 in_blockquote = True
-            blockquote_text = blockquote.group(1).strip()
-            blockquote_lines.append(blockquote_text)
+            html_parts.append(f"  <p>{html.escape(blockquote.group(1).strip())}</p>")
             continue
 
         list_match = LIST_ITEM_PATTERN.match(line)
@@ -286,16 +223,15 @@ def simple_markdown_to_html(text: str) -> str:
                 html_parts.append(f"<{list_type}>")
                 list_stack.append(list_type)
             item_text = line[list_match.end():].strip()
-            # 处理列表项中的链接和加粗
-            item_html = convert_markdown_inline(item_text)
-            html_parts.append(f"  <li>{item_html}</li>")
+            html_parts.append(f"  <li>{html.escape(item_text)}</li>")
             continue
 
         paragraph_lines.append(line)
 
-    flush_blockquote()
     flush_paragraph()
     close_lists()
+    if in_blockquote:
+        html_parts.append("</blockquote>")
 
     return "\n".join(html_parts)
 
@@ -449,20 +385,29 @@ def get_note_page_template(category: str) -> str:
     category_info = CATEGORY_MAP.get(category, CATEGORY_MAP["basics"])
     html_file, page_title, hero_class, badge = category_info
     
-    # 生成导航栏，当前板块高亮
+    # 生成导航链接，当前 category 的链接添加 active 类
     nav_links = []
-    for cat, (hf, pt, _, _) in CATEGORY_MAP.items():
-        active = ' class="active"' if cat == category else ''
-        nav_links.append(f'      <a href="../{hf}"{active}>{pt}</a>')
-    nav_html = "\n".join(nav_links)
+    for cat, (cat_file, cat_title, _, _) in CATEGORY_MAP.items():
+        active_class = ' class="active"' if cat == category else ''
+        nav_links.append(f'      <a href="../{cat_file}"{active_class}>{cat_title}</a>')
+    nav_html = '\n'.join(nav_links)
     
-    # 使用普通字符串模板，避免 f-string 转义问题
-    template_str = """<!DOCTYPE html>
+    # 返回链接文本
+    back_text_map = {
+        "basics": "← 返回基础概念列表",
+        "papers": "← 返回论文拆解列表",
+        "pathways": "← 返回通路与方法区列表",
+        "stories": "← 返回人类演化 & 疾病小随笔列表",
+    }
+    back_text = back_text_map.get(category, "← 返回列表")
+    
+    # 使用双大括号转义占位符，这样 format() 才能正确替换
+    return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title} - {page_title}</title>
+  <title>{{{{title}}}} - {page_title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -488,9 +433,9 @@ def get_note_page_template(category: str) -> str:
     <section class="hero hero-sub {hero_class}">
       <div class="hero-copy">
         <span class="badge">{badge}</span>
-        <h1>{title}</h1>
-        <p class="article-detail__meta">{meta_line}</p>
-        <a class="article-detail__back" href="../{html_file}">← 返回列表</a>
+        <h1>{{{{title}}}}</h1>
+        <p class="article-detail__meta">{{{{meta_line}}}}</p>
+        <a class="article-detail__back" href="../{html_file}">{back_text}</a>
       </div>
       <div class="hero-illustration hero-illustration--mini" aria-hidden="true">
         <div class="blob blob-2"></div>
@@ -500,7 +445,7 @@ def get_note_page_template(category: str) -> str:
 
     <section class="section article-detail">
       <article class="article-detail__card">
-{body}
+{{{{body}}}}
       </article>
     </section>
   </main>
@@ -515,17 +460,6 @@ def get_note_page_template(category: str) -> str:
 </body>
 </html>
 """
-    # 先替换 f-string 变量
-    return template_str.format(
-        page_title=page_title,
-        hero_class=hero_class,
-        badge=badge,
-        html_file=html_file,
-        nav_html=nav_html,
-        title="{title}",
-        meta_line="{meta_line}",
-        body="{body}"
-    )
 
 
 def write_note_pages(notes: List[Note]) -> None:
@@ -548,8 +482,8 @@ def write_note_pages(notes: List[Note]) -> None:
         body_html = note.html_body
         combined_body = meta_html + "\n" + body_html if meta_html else body_html
 
-        template = get_note_page_template(note.category)
-        detail_html = template.format(
+        template_str = get_note_page_template(note.category)
+        detail_html = template_str.format(
             title=html.escape(note.title),
             meta_line=html.escape(meta_line),
             body=textwrap.indent(combined_body, "        ")
