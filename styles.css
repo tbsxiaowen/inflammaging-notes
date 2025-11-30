@@ -770,6 +770,41 @@ a:not(.button):not(.card-link):not(.article-card__link):not(.site-nav a) {
   border-radius: 12px;
 }
 
+/* 表格样式 */
+.article-detail__card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.article-detail__card table thead {
+  background: var(--accent-light);
+}
+
+.article-detail__card table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-strong);
+}
+
+.article-detail__card table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+}
+
+.article-detail__card table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.article-detail__card table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 .message-board {
   margin-top: 2.5rem;
 }

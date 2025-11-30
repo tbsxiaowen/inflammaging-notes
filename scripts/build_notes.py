@@ -151,15 +151,32 @@ LIST_ITEM_PATTERN = re.compile(r"^\s*([*+-]|\d+[.)])\s+")
 HEADING_PATTERN = re.compile(r"^(#{1,6})\s+(.*)$")
 BLOCKQUOTE_PATTERN = re.compile(r"^>\s?(.*)$")
 HORIZONTAL_RULE_PATTERN = re.compile(r"^\s*([-*_])\s*\1\s*\1\s*$")
+TABLE_ROW_PATTERN = re.compile(r"^\s*\|(.+)\|\s*$")
+TABLE_SEPARATOR_PATTERN = re.compile(r"^\s*\|[\s\-:|]+\|\s*$")
+
+
+def parse_table_row(line: str) -> List[str]:
+    """解析表格行，返回单元格列表"""
+    if not line.strip().startswith("|"):
+        return []
+    cells = [cell.strip() for cell in line.strip().split("|")[1:-1]]
+    return cells
+
+
+def is_table_separator(line: str) -> bool:
+    """判断是否是表格分隔符行"""
+    return bool(TABLE_SEPARATOR_PATTERN.match(line))
 
 
 def simple_markdown_to_html(text: str) -> str:
-    """极简 Markdown 解析器，覆盖标题、引用、列表、段落。"""
+    """极简 Markdown 解析器，覆盖标题、引用、列表、段落、表格。"""
     lines = text.splitlines()
     html_parts: List[str] = []
     list_stack: List[str] = []
     in_blockquote = False
     paragraph_lines: List[str] = []
+    table_rows: List[List[str]] = []
+    in_table = False
 
     def flush_paragraph() -> None:
         if paragraph_lines:
@@ -168,6 +185,29 @@ def simple_markdown_to_html(text: str) -> str:
                 html_parts.append(f"<p>{html.escape(paragraph)}</p>")
             paragraph_lines.clear()
 
+    def flush_table() -> None:
+        if not table_rows:
+            return
+        html_parts.append("<table>")
+        # 第一行是表头
+        if table_rows:
+            html_parts.append("  <thead>")
+            html_parts.append("    <tr>")
+            for cell in table_rows[0]:
+                html_parts.append(f"      <th>{html.escape(cell)}</th>")
+            html_parts.append("    </tr>")
+            html_parts.append("  </thead>")
+            html_parts.append("  <tbody>")
+            # 后续行是数据行
+            for row in table_rows[1:]:
+                html_parts.append("    <tr>")
+                for cell in row:
+                    html_parts.append(f"      <td>{html.escape(cell)}</td>")
+                html_parts.append("    </tr>")
+            html_parts.append("  </tbody>")
+        html_parts.append("</table>")
+        table_rows.clear()
+
     def close_lists(to_level: int = 0) -> None:
         while len(list_stack) > to_level:
             tag = list_stack.pop()
@@ -175,6 +215,31 @@ def simple_markdown_to_html(text: str) -> str:
 
     for raw in lines:
         line = raw.rstrip()
+        
+        # 先检查是否是表格分隔符行（必须在表格行检查之前）
+        if is_table_separator(line):
+            # 表格分隔符行，跳过
+            continue
+        
+        # 检查是否是表格行
+        if TABLE_ROW_PATTERN.match(line):
+            cells = parse_table_row(line)
+            if cells:
+                if not in_table:
+                    flush_paragraph()
+                    close_lists()
+                    if in_blockquote:
+                        html_parts.append("</blockquote>")
+                        in_blockquote = False
+                    in_table = True
+                table_rows.append(cells)
+                continue
+        else:
+            # 不是表格行，如果之前在表格中，先结束表格
+            if in_table:
+                flush_table()
+                in_table = False
+        
         if not line.strip():
             flush_paragraph()
             close_lists()
@@ -228,6 +293,9 @@ def simple_markdown_to_html(text: str) -> str:
 
         paragraph_lines.append(line)
 
+    # 处理最后可能残留的表格或段落
+    if in_table:
+        flush_table()
     flush_paragraph()
     close_lists()
     if in_blockquote:
@@ -322,7 +390,8 @@ def collect_notes() -> List[Note]:
             clean_summary = plain_text.strip().replace("\n", " ")
             summary = clean_summary[:140] + "…" if len(clean_summary) > 140 else clean_summary
 
-        slug = slugify(title, fallback_seed=md_path.stem, sequence=idx)
+        # 使用文件名作为 slug 的基础，避免标题 slug 冲突
+        slug = slugify(md_path.stem, fallback_seed=title, sequence=idx)
         body_without_meta = []
         for line in body_lines:
             stripped = line.strip()
