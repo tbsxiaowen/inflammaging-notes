@@ -153,6 +153,7 @@ BLOCKQUOTE_PATTERN = re.compile(r"^>\s?(.*)$")
 HORIZONTAL_RULE_PATTERN = re.compile(r"^\s*([-*_])\s*\1\s*\1\s*$")
 TABLE_ROW_PATTERN = re.compile(r"^\s*\|(.+)\|\s*$")
 TABLE_SEPARATOR_PATTERN = re.compile(r"^\s*\|[\s\-:|]+\|\s*$")
+LINK_PATTERN = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
 
 
 def parse_table_row(line: str) -> List[str]:
@@ -178,11 +179,35 @@ def simple_markdown_to_html(text: str) -> str:
     table_rows: List[List[str]] = []
     in_table = False
 
+    def process_inline_markdown(text: str) -> str:
+        """处理行内 Markdown，如链接"""
+        # 使用占位符方法：先标记链接位置，转义后替换
+        link_placeholders = []
+        def replace_with_placeholder(match):
+            link_text = match.group(1)
+            link_url = match.group(2)
+            placeholder = f"__LINK_PLACEHOLDER_{len(link_placeholders)}__"
+            link_placeholders.append((placeholder, link_text, link_url))
+            return placeholder
+        
+        # 在转义前先标记所有链接
+        text_with_placeholders = LINK_PATTERN.sub(replace_with_placeholder, text)
+        # 转义所有 HTML 特殊字符
+        text = html.escape(text_with_placeholders)
+        # 恢复链接（使用转义后的占位符）
+        for placeholder, link_text, link_url in link_placeholders:
+            escaped_text = html.escape(link_text)
+            escaped_url = html.escape(link_url)
+            escaped_placeholder = html.escape(placeholder)
+            text = text.replace(escaped_placeholder, f'<a href="{escaped_url}">{escaped_text}</a>')
+        return text
+
     def flush_paragraph() -> None:
         if paragraph_lines:
             paragraph = " ".join(paragraph_lines).strip()
             if paragraph:
-                html_parts.append(f"<p>{html.escape(paragraph)}</p>")
+                processed = process_inline_markdown(paragraph)
+                html_parts.append(f"<p>{processed}</p>")
             paragraph_lines.clear()
 
     def flush_table() -> None:
@@ -194,7 +219,8 @@ def simple_markdown_to_html(text: str) -> str:
             html_parts.append("  <thead>")
             html_parts.append("    <tr>")
             for cell in table_rows[0]:
-                html_parts.append(f"      <th>{html.escape(cell)}</th>")
+                processed_cell = process_inline_markdown(cell)
+                html_parts.append(f"      <th>{processed_cell}</th>")
             html_parts.append("    </tr>")
             html_parts.append("  </thead>")
             html_parts.append("  <tbody>")
@@ -276,7 +302,8 @@ def simple_markdown_to_html(text: str) -> str:
             if not in_blockquote:
                 html_parts.append("<blockquote>")
                 in_blockquote = True
-            html_parts.append(f"  <p>{html.escape(blockquote.group(1).strip())}</p>")
+            processed_quote = process_inline_markdown(blockquote.group(1).strip())
+            html_parts.append(f"  <p>{processed_quote}</p>")
             continue
 
         list_match = LIST_ITEM_PATTERN.match(line)
@@ -288,7 +315,8 @@ def simple_markdown_to_html(text: str) -> str:
                 html_parts.append(f"<{list_type}>")
                 list_stack.append(list_type)
             item_text = line[list_match.end():].strip()
-            html_parts.append(f"  <li>{html.escape(item_text)}</li>")
+            processed_item = process_inline_markdown(item_text)
+            html_parts.append(f"  <li>{processed_item}</li>")
             continue
 
         paragraph_lines.append(line)
@@ -507,7 +535,7 @@ def render_note_detail_page(note: Note, combined_body_html: str, meta_line: str)
     <section class="hero hero-sub {hero_class}">
       <div class="hero-copy">
         <span class="badge">{badge}</span>
-        <h1>{html.escape(note.title)}</h1>
+        <h1>{html.escape(note.title.split(" ")[0] if " " in note.title else note.title)}</h1>
         <p class="article-detail__meta">{html.escape(meta_line)}</p>
         <a class="article-detail__back" href="../{html_file}">{back_text}</a>
       </div>
