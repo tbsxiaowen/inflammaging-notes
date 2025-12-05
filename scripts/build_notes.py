@@ -154,6 +154,7 @@ HORIZONTAL_RULE_PATTERN = re.compile(r"^\s*([-*_])\s*\1\s*\1\s*$")
 TABLE_ROW_PATTERN = re.compile(r"^\s*\|(.+)\|\s*$")
 TABLE_SEPARATOR_PATTERN = re.compile(r"^\s*\|[\s\-:|]+\|\s*$")
 LINK_PATTERN = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
+IMAGE_PATTERN = re.compile(r"!\[([^\]]*)\]\(([^\)]+)\)")
 
 
 def parse_table_row(line: str) -> List[str]:
@@ -180,20 +181,36 @@ def simple_markdown_to_html(text: str) -> str:
     in_table = False
 
     def process_inline_markdown(text: str) -> str:
-        """处理行内 Markdown，如链接"""
-        # 使用占位符方法：先标记链接位置，转义后替换
+        """处理行内 Markdown，如链接和图片"""
+        # 使用占位符方法：先标记链接和图片位置，转义后替换
         link_placeholders = []
-        def replace_with_placeholder(match):
+        image_placeholders = []
+        
+        def replace_link_with_placeholder(match):
             link_text = match.group(1)
             link_url = match.group(2)
             placeholder = f"__LINK_PLACEHOLDER_{len(link_placeholders)}__"
             link_placeholders.append((placeholder, link_text, link_url))
             return placeholder
         
-        # 在转义前先标记所有链接
-        text_with_placeholders = LINK_PATTERN.sub(replace_with_placeholder, text)
+        def replace_image_with_placeholder(match):
+            alt_text = match.group(1)
+            image_url = match.group(2)
+            placeholder = f"__IMAGE_PLACEHOLDER_{len(image_placeholders)}__"
+            image_placeholders.append((placeholder, alt_text, image_url))
+            return placeholder
+        
+        # 在转义前先标记所有图片和链接
+        text_with_placeholders = IMAGE_PATTERN.sub(replace_image_with_placeholder, text)
+        text_with_placeholders = LINK_PATTERN.sub(replace_link_with_placeholder, text_with_placeholders)
         # 转义所有 HTML 特殊字符
         text = html.escape(text_with_placeholders)
+        # 恢复图片（使用转义后的占位符）
+        for placeholder, alt_text, image_url in image_placeholders:
+            escaped_alt = html.escape(alt_text)
+            escaped_url = html.escape(image_url)
+            escaped_placeholder = html.escape(placeholder)
+            text = text.replace(escaped_placeholder, f'<img src="{escaped_url}" alt="{escaped_alt}" style="max-width: 100%; height: auto;">')
         # 恢复链接（使用转义后的占位符）
         for placeholder, link_text, link_url in link_placeholders:
             escaped_text = html.escape(link_text)
@@ -317,6 +334,21 @@ def simple_markdown_to_html(text: str) -> str:
             item_text = line[list_match.end():].strip()
             processed_item = process_inline_markdown(item_text)
             html_parts.append(f"  <li>{processed_item}</li>")
+            continue
+
+        # 检查是否是独立的图片行
+        image_match = IMAGE_PATTERN.match(line.strip())
+        if image_match:
+            flush_paragraph()
+            close_lists()
+            if in_blockquote:
+                html_parts.append("</blockquote>")
+                in_blockquote = False
+            alt_text = image_match.group(1)
+            image_url = image_match.group(2)
+            escaped_alt = html.escape(alt_text)
+            escaped_url = html.escape(image_url)
+            html_parts.append(f'<p><img src="{escaped_url}" alt="{escaped_alt}" style="max-width: 100%; height: auto;"></p>')
             continue
 
         paragraph_lines.append(line)
