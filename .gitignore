@@ -1,3 +1,52 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+venv-*/
+env/
+ENV/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# 视频下载输出
+video-download/downloads/
+
+# 输出文件（爬虫生成的数据，通常很大）
+我的爬虫/*/output/
+我的爬虫/*/scrape*.log
+我的爬虫/*/test_page.html
+
+# 服务器练习（生物信息二进制数据文件，不适合放 Git）
+服务器练习/data/
+服务器练习/ref/
+服务器练习/results/
+
+# 大文件（PDF 超过 1MB 不适合放 Git）
+inflammaging_site/pdfs/
+
+# 系统文件
 .DS_Store
-*.pyc
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.tmp
+*.log
+*.bak

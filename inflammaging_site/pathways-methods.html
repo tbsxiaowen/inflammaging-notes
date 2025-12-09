@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pathways & Methods｜通路与方法区 - 炎症衰老研究</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">IA</span>
+      <div>
+        <h1>炎症衰老研究笔记</h1>
+        <p class="tagline">Pathways & Methods｜通路与方法区</p>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html">首页</a>
+      <a href="papers.html">Papers｜论文拆解</a>
+      <a href="pathways-methods.html" class="active">Pathways & Methods｜通路与方法区</a>
+      <a href="basics.html">Basics｜基础概念</a>
+      <a href="stories-evolution.html">Stories & Evolution｜人类演化 & 疾病小随笔</a>
+      <a href="contact.html">联系我</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="hero hero-sub hero-sub--pathways">
+      <div class="hero-copy">
+        <span class="badge">Toolkit</span>
+        <h1>通路与方法区</h1>
+        <p>精挑细选 inflammaging 研究常用的数据集、分析软件与实验 SOP，整理关键信号通路与研究方法，让灵感落地更顺畅。</p>
+      </div>
+      <div class="hero-illustration hero-illustration--mini" aria-hidden="true">
+        <div class="blob blob-3"></div>
+        <div class="spark spark-2"></div>
+      </div>
+    </section>
+
+    <section class="section article-list">
+      <div class="section-head">
+        <span class="section-eyebrow">通路与方法</span>
+        <h2 class="section-title">Pathways & Methods Collection</h2>
+      </div>
+      <div class="article-list__grid">
+        <!-- BEGIN:ARTICLE_LIST -->
+        <article class="article-card" id="pathways">
+                  <header class="article-card__header">
+                    <h3>巧用自然实验：解析回归不连续设计研究方法</h3>
+                    <p class="article-card__meta">2025-12-05 · Research methods，Regression discontinuity design，Natural experiment，Causal inference</p>
+                  </header>
+                  <p class="article-card__summary">在医学研究领域，我们面临一个核心挑战：如何区分相关性与因果性？例如，我们观察到接种某种疫苗的人群中，痴呆症发病率较低。但这是否意味着疫苗导致了风险的降低？还是仅仅是一种巧合？本文将以一项关于带状疱疹疫苗与痴呆症风险的研究为例，深入解析一个巧妙的研究方法，帮助我们拨开迷雾，探寻事件…</p>
+                  <div class="article-card__actions">
+                    <a class="article-card__link" href="notes/pathways.html">阅读全文</a>
+                  </div>
+                </article>
+        <article class="article-card" id="pathways-h4k20me1">
+                  <header class="article-card__header">
+                    <h3>从 H4K20me1 到铁死亡：慢性炎症如何改写干细胞的命运？</h3>
+                    <p class="article-card__meta">2025-11-26 · inflammaging，H4K20me1，ferroptosis，stem cells</p>
+                  </header>
+                  <p class="article-card__summary">这一篇把视角缩小到分子通路加实验方法，顺着 2025 年《Nature Aging》这篇 H4K20me1 论文，走一遍从炎症信号到干细胞死亡的完整链条 [Nature](https://www.nature.com/articles/s43587-025-00902-5)。</p>
+                  <div class="article-card__actions">
+                    <a class="article-card__link" href="notes/pathways-h4k20me1.html">阅读全文</a>
+                  </div>
+                </article>
+        <article class="article-card" id="pathways-husi-oclr">
+                  <header class="article-card__header">
+                    <h3>hUSI 是如何判断细胞衰老的？——从 OCLR 到 GMM 的全流程解读</h3>
+                    <p class="article-card__meta">2025-10-12 · Cellular Senescence，Transcriptomics，OCLR，hUSI</p>
+                  </header>
+                  <p class="article-card__summary">从 OCLR 到 GMM 的全流程解读（初学者友好版）</p>
+                  <div class="article-card__actions">
+                    <a class="article-card__link" href="notes/pathways-husi-oclr.html">阅读全文</a>
+                  </div>
+                </article>
+        <article class="article-card" id="pathways-female-immunity-x-chromosome">
+                  <header class="article-card__header">
+                    <h3>从 X 染色体到 ROS：女性免疫优势背后的通路与研究方法</h3>
+                    <p class="article-card__meta">2025-09-22 · X chromosome，Immune system，Estrogen，ROS，Research methods</p>
+                  </header>
+                  <p class="article-card__summary">如果只用一句话概括 New Scientist 那篇《Women have supercharged immune systems and we now know why》的核心信息，那就是：</p>
+                  <div class="article-card__actions">
+                    <a class="article-card__link" href="notes/pathways-female-immunity-x-chromosome.html">阅读全文</a>
+                  </div>
+                </article>
+<!-- END:ARTICLE_LIST -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> 炎症衰老研究笔记</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+

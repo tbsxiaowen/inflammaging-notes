@@ -1,0 +1,145 @@
+---
+title: 论文拆解｜炎症性衰老，并不是所有人类的共同命运 Nonuniversality of inflammaging across human populations
+date: 2025-11-26
+tags: [inflammaging, epidemiology, evolution, cytokines, aging]
+category: papers
+---
+
+# 论文拆解｜炎症性衰老，并不是所有人类的共同命运
+
+Maximilien Franck 等：Nonuniversality of inflammaging across human populations，发表在 2025 年的 Nature Aging [Nature](https://www.nature.com/articles/s43587-025-00888-0)。
+
+---
+
+## 1. 背景：inflammaging 真的普适吗？
+
+过去二十多年里，炎症性衰老几乎被写进教科书：
+
+- 多个人群中，随年龄增长，血浆 IL‑6、TNF‑α、CRP 等指标缓慢升高；  
+- 这些指标与多种老年慢性病以及死亡风险显著相关 [Scientific Reports](https://www.nature.com/articles/s41598-021-97225-3)。  
+
+因此，一个被广泛接受的假设是：炎症随年龄上升是人类衰老的共性特征。
+
+但大部分证据来自工业化国家的人群。在生活方式、感染谱和环境暴露完全不同的原住民群体中，这条规律是否仍然成立？  
+这正是这篇 Nature Aging 想要回答的问题 [PubMed](https://pubmed.ncbi.nlm.nih.gov/40588649/)。
+
+---
+
+## 2. 研究设计：四个人群，一条炎症轴
+
+### 2.1 四个队列
+
+1. 意大利 InCHIANTI 队列：典型欧洲老龄化城市人群；  
+2. 新加坡老龄化研究（SLAS）：另一工业化国家人群，族群结构不同；  
+3. 玻利维亚 Tsimane 原住民：狩猎采集加小规模农耕，高感染负荷；  
+4. 马来西亚 Orang Asli 原住民：热带雨林环境，寄生虫感染常见 [ResearchGate 预印本](https://www.researchgate.net/publication/393176033_Nonuniversality_of_inflammaging_across_human_populations)。  
+
+### 2.2 统一的炎症测量框架
+
+- 各队列尽量使用相同 panel 的 19 种细胞因子（包括多种促炎和抗炎因子）进行检测 [PubMed](https://pubmed.ncbi.nlm.nih.gov/40588649/)；  
+- 在意大利队列中，作者首先通过主成分分析，从这 19 个指标中提取一条炎症轴（inflammaging axis）：可以理解为综合描述炎症随年龄变化模式的主成分；  
+- 然后他们问：这条炎症轴在另外三个队列中是否也存在，并且同样随年龄上升？  
+
+---
+
+## 3. 主要结果：工业化 vs 原住民，炎症年龄曲线截然不同
+
+### 3.1 工业化国家：inflammaging 轴高度一致
+
+- 在意大利队列中，炎症轴随年龄显著上升；  
+- 在新加坡队列中，利用同一套 19 种细胞因子计算出的炎症轴，形状几乎相同：  
+  年龄越大，炎症轴分数越高，高分组老年人的慢病负担更重 [PubMed](https://pubmed.ncbi.nlm.nih.gov/40588649/)。  
+
+这部分结果基本验证了之前的主流认识：在工业化社会里，inflammaging 确实是一种稳定存在的模式。
+
+### 3.2 原住民：炎症很高，但不再随年龄继续升高
+
+把同样的方法搬到 Tsimane 和 Orang Asli：
+
+- 这两个群体的细胞因子绝对水平整体较高，反映了高感染负荷；  
+- 但年龄对炎症轴的贡献几乎为零：  
+  年轻人与老年人之间，炎症轴没有系统性差别，只能看到一些与感染暴露相关的波动 [PubMed](https://pubmed.ncbi.nlm.nih.gov/40588649/)。  
+
+换句话说，在这些原住民群体中，慢性炎症是从小就高，而不是随着年龄再爬坡。
+
+与此对应的流行病学图景是：
+
+- 他们几乎不出现工业化国家常见的冠心病、2 型糖尿病和阿尔茨海默病 [Columbia SPH](https://www.publichealth.columbia.edu/news/aging-related-inflammation-not-universal-across-human-populations)；  
+- 但寄生虫和慢性感染非常普遍，免疫系统主要在对付外敌 [ResearchGate](https://www.researchgate.net/publication/393176033_Nonuniversality_of_inflammaging_across_human_populations)。  
+
+---
+
+## 4. 方法与统计上的细节：值得学的点
+
+1. 多队列可比性处理  
+   - 各队列年龄结构、性别比例、社会经济因素不同；  
+   - 作者通过标准化、协变量调整和敏感性分析，尽量把这些差异拉平，让炎症轴的比较更稳妥 [PubMed](https://pubmed.ncbi.nlm.nih.gov/40588649/)。  
+
+2. 强调模式而不仅是水平  
+   - 不只是比较细胞因子的平均浓度，更关注年龄与炎症之间关系的形状：是线性上升，还是在年轻时就高、之后保持平稳；  
+   - 这种曲线形状的比较，比单纯看平均差异更有生物学意义 [PubMed](https://pubmed.ncbi.nlm.nih.gov/40588649/)。  
+
+3. 从单因子到炎症轴的降维  
+   - 只盯着单一指标（例如 IL‑6 或 CRP）容易受测量误差和实验条件影响；  
+   - 利用 19 种细胞因子抽取一个主成分，可以作为慢性炎症状态的更稳健表征，也为构建 inflammaging 指数提供了模板 [ResearchGate](https://www.researchgate.net/publication/393176033_Nonuniversality_of_inflammaging_across_human_populations)。  
+
+---
+
+## 5. 作者的解释：炎症性衰老是现代生活方式的副产品？
+
+综合四个人群的结果，作者得出的结论是：
+
+1. 炎症性衰老不是全人类的普适现象；  
+2. 工业化社会中看到的 inflammaging，更可能是工业化生活方式（高热量饮食、污染、久坐、睡眠不足等）叠加长寿的结果 [Columbia SPH](https://www.publichealth.columbia.edu/news/aging-related-inflammation-not-universal-across-human-populations)；  
+3. 在高感染负荷但低工业化的原住民群体中，免疫系统从小就高度活跃，但这种活跃没有随着年龄继续爬坡，也没有转化成相同谱系的慢性病。  
+
+讨论部分甚至建议：也许我们应该把 inflammaging 理解为工业化环境、生活方式与延长寿命发生错配后的系统性代价，而不是衰老本身的必然属性 [Columbia SPH](https://www.publichealth.columbia.edu/news/aging-related-inflammation-not-universal-across-human-populations)。
+
+---
+
+## 6. 我怎么看：这篇文章为什么重要？
+
+### 6.1 对教科书叙事的温和纠偏
+
+这篇文章并没有否认炎症参与衰老，而是温和地修正了一个过度简化的叙事：
+
+- 不是年龄一定带来炎症；  
+- 而是在特定环境组合下，年龄与炎症之间呈现出特定模式。  
+
+对后续写综述或项目设计的启示是：  
+在谈 inflammaging 时，最好明确限定语境，例如“在工业化人群中”“在高 BMI、久坐背景下”等。
+
+### 6.2 和 H4K20me1 那篇文章如何对接？
+
+如果把 2025 年的两篇 Nature Aging 放在一起看，很有意思：
+
+- H4K20me1 文章告诉我们：  
+  一旦慢性炎症存在，它可以通过 H4K20me1 侵蚀、推动干细胞走向 ferroptosis，直接加速组织衰老 [Nature](https://www.nature.com/articles/s43587-025-00902-5)；  
+- Nonuniversality 文章提醒我们：  
+  这种慢性炎症背景本身，并不是所有人类都具备的，它更像是现代生活方式加长寿产生的额外变量 [Nature](https://www.nature.com/articles/s43587-025-00888-0)。  
+
+ 
+
+### 6.3 对未来课题设计的启示
+
+如果做基于公共数据库的课题，可以考虑：
+
+1. 明确自己分析的是哪类人群（例如 TCGA 多为工业化国家样本）；  
+2. 在讨论中主动承认这种人群局限性，并引用这篇 Nonuniversality 文章；  
+3. 如果有机会接触到中国不同地区（城市 vs 农村、不同污染暴露水平）的人群数据，可以尝试在本土数据中复现炎症年龄曲线的差异，这会非常有价值。  
+
+---
+
+## 7. 总结
+
+如果说 H4K20me1 那篇文章是在显微镜下展示一颗干细胞如何在炎症中生锈、碎裂，  
+那么 Nonuniversality of inflammaging across human populations 做的是另一件同样重要的事：
+
+> 它把镜头抬高到全球尺度，告诉我们：  
+> 并不是所有人类都活在同一种炎症性衰老的世界里。
+
+---
+
+如果你也有炎症 × 老化 × 演化的研究兴趣，请给我[留言](../contact.html)，一起讨论学习。
+
+
