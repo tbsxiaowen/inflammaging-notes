@@ -1,6 +1,6 @@
 ---
 title: 肝脏生物工厂：一种利用mRNA技术重塑衰老免疫系统的新范式
-date: 2024-12-16
+date: 2025-12-16
 tags: [mRNA-LNP, liver biofactory, immune senescence, DFI therapy, translational medicine]
 category: pathways
 ---

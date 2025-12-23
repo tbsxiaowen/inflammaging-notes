@@ -1,6 +1,6 @@
 ---
 title: 解密"免疫衰老"：为什么我们的免疫力会随年龄增长而变弱？
-date: 2024-12-16
+date: 2025-12-16
 tags: [immune senescence, T cells, thymus, aging, immunology basics]
 category: basics
 ---

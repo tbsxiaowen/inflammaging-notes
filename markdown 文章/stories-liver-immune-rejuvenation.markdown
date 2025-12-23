@@ -1,6 +1,6 @@
 ---
 title: 返老还童的免疫系统：科学家如何"巧用"肝脏重振老年小鼠的免疫力
-date: 2024-12-16
+date: 2025-12-16
 tags: [immune senescence, mRNA therapy, liver, T cells, thymus]
 category: stories
 ---
