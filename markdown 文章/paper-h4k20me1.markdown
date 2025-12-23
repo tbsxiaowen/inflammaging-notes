@@ -87,7 +87,7 @@ Roméo S. Blanc 等：Epigenetic erosion of H4K20me1 induced by inflammation dri
 
 ---
 
-## 4. 亮点与局限：这篇文章告诉了我们什么？
+## 4. 亮点与局限：这篇文章告诉研究者什么？
 
 ### 4.1 亮点
 
@@ -127,7 +127,7 @@ Roméo S. Blanc 等：Epigenetic erosion of H4K20me1 induced by inflammation dri
    看二者在肿瘤或组织老化数据集中是否有类似的共变模式。  
 
 
-> 这篇文章在分子层面告诉我们，老年肌肉里那团慢性炎症，最后会以铁锈的形式落在干细胞身上。
+> 这篇文章在分子层面告诉研究者，老年肌肉里那团慢性炎症，最后会以铁锈的形式落在干细胞身上。
 
 ---
 
