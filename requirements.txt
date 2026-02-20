@@ -1,0 +1,11 @@
+# 视频下载器
+yt-dlp
+
+# inflammaging 站点构建（可选）
+markdown>=3.5
+
+# 爬虫
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+playwright>=1.40.0
+requests>=2.31.0
