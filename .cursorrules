@@ -1,0 +1,6 @@
+# 项目规则
+
+## 视频下载 Skill（随开随下）
+- 当用户给出视频链接并要求下载时，使用 `video-download/download_video.py`。
+- 命令：`python video-download/download_video.py <视频URL>`；可选 `-o <目录>` 指定保存位置，默认 `video-download/downloads`。
+- 依赖：`pip install -r video-download/requirements_download_video.txt`（或 `pip install yt-dlp`）。详见 `video-download/README.md`。

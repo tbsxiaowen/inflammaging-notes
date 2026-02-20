@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# 输出文件（爬虫生成的数据，通常很大）
+我的爬虫/*/output/
+我的爬虫/*/scrape*.log
+我的爬虫/*/test_page.html
+
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.tmp
+*.log
+*.bak
+
+# 大型文件（PDF、HTML 等，如果太大可以取消注释）
+# *.pdf
+# *.html
+

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="64" cy="64" r="62" fill="#ff0000" stroke="#cc0000" stroke-width="2"/>
-  <text x="64" y="80" font-family="Arial, sans-serif" font-size="42" 
-        text-anchor="middle" fill="white" font-weight="bold">YT</text>
-</svg>

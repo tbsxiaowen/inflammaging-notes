@@ -93,7 +93,7 @@ Maximilien Franck 等：Nonuniversality of inflammaging across human populations
 2. 工业化社会中看到的 inflammaging，更可能是工业化生活方式（高热量饮食、污染、久坐、睡眠不足等）叠加长寿的结果 [Columbia SPH](https://www.publichealth.columbia.edu/news/aging-related-inflammation-not-universal-across-human-populations)；  
 3. 在高感染负荷但低工业化的原住民群体中，免疫系统从小就高度活跃，但这种活跃没有随着年龄继续爬坡，也没有转化成相同谱系的慢性病。  
 
-讨论部分甚至建议：也许我们应该把 inflammaging 理解为工业化环境、生活方式与延长寿命发生错配后的系统性代价，而不是衰老本身的必然属性 [Columbia SPH](https://www.publichealth.columbia.edu/news/aging-related-inflammation-not-universal-across-human-populations)。
+讨论部分甚至建议：也许研究者应该把 inflammaging 理解为工业化环境、生活方式与延长寿命发生错配后的系统性代价，而不是衰老本身的必然属性 [Columbia SPH](https://www.publichealth.columbia.edu/news/aging-related-inflammation-not-universal-across-human-populations)。
 
 ---
 
@@ -113,9 +113,9 @@ Maximilien Franck 等：Nonuniversality of inflammaging across human populations
 
 如果把 2025 年的两篇 Nature Aging 放在一起看，很有意思：
 
-- H4K20me1 文章告诉我们：  
+- H4K20me1 文章告诉研究者：  
   一旦慢性炎症存在，它可以通过 H4K20me1 侵蚀、推动干细胞走向 ferroptosis，直接加速组织衰老 [Nature](https://www.nature.com/articles/s43587-025-00902-5)；  
-- Nonuniversality 文章提醒我们：  
+- Nonuniversality 文章提醒研究者：  
   这种慢性炎症背景本身，并不是所有人类都具备的，它更像是现代生活方式加长寿产生的额外变量 [Nature](https://www.nature.com/articles/s43587-025-00888-0)。  
 
  
@@ -135,7 +135,7 @@ Maximilien Franck 等：Nonuniversality of inflammaging across human populations
 如果说 H4K20me1 那篇文章是在显微镜下展示一颗干细胞如何在炎症中生锈、碎裂，  
 那么 Nonuniversality of inflammaging across human populations 做的是另一件同样重要的事：
 
-> 它把镜头抬高到全球尺度，告诉我们：  
+> 它把镜头抬高到全球尺度，告诉研究者：  
 > 并不是所有人类都活在同一种炎症性衰老的世界里。
 
 ---
