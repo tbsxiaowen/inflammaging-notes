@@ -1,6 +1,34 @@
 # 项目规则
 
-## 视频下载 Skill（随开随下）
+本仓库包含多个独立项目，以下是各项目的使用说明。
+
+## 视频下载器
 - 当用户给出视频链接并要求下载时，使用 `video-download/download_video.py`。
-- 命令：`python video-download/download_video.py <视频URL>`；可选 `-o <目录>` 指定保存位置，默认 `video-download/downloads`。
-- 依赖：`pip install -r video-download/requirements_download_video.txt`（或 `pip install yt-dlp`）。详见 `video-download/README.md`。
+- 图形界面：`python video-download/download_gui.py`（自动监听剪贴板）。
+- 命令行：`python video-download/download_video.py <视频URL>`；可选 `-o <目录>` 指定保存位置，默认 `video-download/downloads`。
+- 支持 YouTube 和哔哩哔哩。
+- 依赖：`pip install yt-dlp`。
+
+## Inflammaging 研究网站
+- 文章写在 `inflammaging_site/markdown 文章/` 目录下，用 Markdown 格式。
+- 构建笔记页面：`python inflammaging_site/scripts/build_notes.py`。
+- 可选依赖：`pip install markdown`。
+- 网站 HTML 文件在 `inflammaging_site/` 根目录，直接浏览器打开即可预览。
+
+## 我的爬虫
+- 多个爬虫子项目在 `我的爬虫/` 目录下，各有独立的 README 和 requirements.txt。
+- 公共工具函数：`我的爬虫/common_utils.py`。
+- 依赖：`pip install -r 我的爬虫/requirements.txt`。
+
+## YouTube 双语字幕插件
+- Chrome 浏览器扩展，在 `YouTube双语字幕插件/` 目录。
+- 安装：Chrome → 扩展程序 → 开发者模式 → 加载已解压的扩展程序 → 选择该目录。
+
+## 退休计算器
+- 运行：`python 退休计算器/retirement_calculator.py`。
+- 依赖：`pip install -r 退休计算器/requirements_retirement.txt`。
+
+## 通用规则
+- 回复请使用中文。
+- 每个项目的依赖尽量隔离，用虚拟环境管理。
+- 大文件（视频、PDF、生物信息数据）不要提交到 Git。
