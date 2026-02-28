@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>退休计算器 — 2025延迟退休新政版</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4f8;--card:#fff;--primary:#4f6df5;--primary-light:#e8ecff;
+  --text:#1a202c;--text2:#4a5568;--border:#e2e8f0;
+  --green:#38a169;--red:#e53e3e;--orange:#dd6b20;
+  --radius:12px;--shadow:0 4px 24px rgba(0,0,0,.08);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:680px;margin:0 auto;padding:24px 16px 60px}
+header{text-align:center;padding:32px 0 8px}
+header h1{font-size:1.75rem;font-weight:700;letter-spacing:.5px}
+header p{color:var(--text2);font-size:.9rem;margin-top:6px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 24px;margin-top:20px}
+.card h2{font-size:1.1rem;font-weight:600;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--primary-light)}
+.form-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.form-row label{min-width:100px;font-weight:500;font-size:.95rem;flex-shrink:0}
+.form-row input[type="number"]{width:72px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;transition:border .2s}
+.form-row input:focus{outline:none;border-color:var(--primary)}
+.form-row .unit{font-size:.9rem;color:var(--text2);margin-right:4px}
+.radio-group{display:flex;gap:6px;flex-wrap:wrap}
+.radio-group label{min-width:auto;display:flex;align-items:center;gap:5px;padding:6px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-weight:400;transition:all .2s;font-size:.9rem;user-select:none}
+.radio-group input{display:none}
+.radio-group label:has(input:checked){border-color:var(--primary);background:var(--primary-light);font-weight:500}
+.female-type{display:none;margin-left:108px}
+.female-type.show{display:flex}
+.check-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.check-row label{min-width:100px;font-weight:500;font-size:.95rem}
+.check-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--primary)}
+.gap-input{display:none;margin-left:108px;margin-bottom:14px;align-items:center;gap:8px}
+.gap-input.show{display:flex}
+.btn{display:block;width:100%;padding:14px;margin-top:20px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:1.05rem;font-weight:600;cursor:pointer;transition:background .2s,transform .1s;letter-spacing:1px}
+.btn:hover{background:#3b57d9}
+.btn:active{transform:scale(.98)}
+
+/* 结果区域 */
+#result{display:none}
+.result-section{margin-bottom:18px}
+.result-section h3{font-size:.95rem;font-weight:600;color:var(--primary);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+.result-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border)}
+.result-item .label{color:var(--text2);font-size:.9rem}
+.result-item .value{font-weight:600;font-size:.9rem;text-align:right}
+.highlight{background:var(--primary-light);border-radius:8px;padding:14px 16px;margin:12px 0;text-align:center}
+.highlight .big{font-size:1.6rem;font-weight:700;color:var(--primary)}
+.highlight .sub{font-size:.85rem;color:var(--text2);margin-top:2px}
+.status-ok{color:var(--green);font-weight:600}
+.status-bad{color:var(--red);font-weight:600}
+.policy-note{background:#fffbeb;border:1px solid #fbd38d;border-radius:8px;padding:14px 16px;font-size:.85rem;color:#744210;line-height:1.7;margin-top:12px}
+.policy-note strong{color:#975a16}
+
+.progress-bar-wrap{margin-top:10px}
+.progress-label{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px}
+.progress-bar{height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}
+.progress-bar .fill{height:100%;border-radius:5px;transition:width .6s ease}
+.fill-work{background:linear-gradient(90deg,#667eea,#764ba2)}
+.fill-social{background:linear-gradient(90deg,#38a169,#68d391)}
+
+footer{text-align:center;padding:24px 0;color:var(--text2);font-size:.8rem}
+
+@media(max-width:500px){
+  .result-grid{grid-template-columns:1fr}
+  .form-row label,.check-row label{min-width:80px;font-size:.88rem}
+  .container{padding:16px 12px 48px}
+  .female-type{margin-left:0}
+  .gap-input{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>🏖️ 退休计算器</h1>
+  <p>基于 2025 年渐进式延迟退休新政（国发〔2024〕30号）</p>
+</header>
+
+<!-- 输入卡片 -->
+<div class="card">
+  <h2>📋 基本信息</h2>
+
+  <div class="form-row">
+    <label>出生日期</label>
+    <input type="number" id="birthYear" value="1990" min="1940" max="2010"> <span class="unit">年</span>
+    <input type="number" id="birthMonth" value="1" min="1" max="12" style="width:56px"> <span class="unit">月</span>
+    <input type="number" id="birthDay" value="1" min="1" max="31" style="width:56px"> <span class="unit">日</span>
+  </div>
+
+  <div class="form-row">
+    <label>性别</label>
+    <div class="radio-group" id="genderGroup">
+      <label><input type="radio" name="gender" value="男" checked>男</label>
+      <label><input type="radio" name="gender" value="女">女</label>
+    </div>
+  </div>
+
+  <div class="radio-group female-type" id="femaleType">
+    <label><input type="radio" name="ftype" value="50" checked>女工人（原50岁退休）</label>
+    <label><input type="radio" name="ftype" value="55">女干部/技术人员（原55岁退休）</label>
+  </div>
+
+  <div class="form-row">
+    <label>工作开始</label>
+    <input type="number" id="workYear" value="2012" min="1960" max="2030"> <span class="unit">年</span>
+    <input type="number" id="workMonth" value="1" min="1" max="12" style="width:56px"> <span class="unit">月</span>
+  </div>
+
+  <div class="form-row">
+    <label>社保开始</label>
+    <input type="number" id="socialYear" value="2012" min="1960" max="2030"> <span class="unit">年</span>
+    <input type="number" id="socialMonth" value="1" min="1" max="12" style="width:56px"> <span class="unit">月</span>
+  </div>
+
+  <div class="check-row">
+    <label>缴费中断</label>
+    <input type="checkbox" id="hasGap"> <span style="font-size:.9rem;color:var(--text2)">有中断</span>
+  </div>
+
+  <div class="gap-input" id="gapRow">
+    <label style="min-width:100px">中断月数</label>
+    <input type="number" id="gapMonths" value="0" min="0" style="width:72px"> <span class="unit">个月</span>
+  </div>
+
+  <button class="btn" onclick="calculate()">🧮 计算退休时间</button>
+</div>
+
+<!-- 结果卡片 -->
+<div class="card" id="result">
+  <h2>📊 计算结果</h2>
+  <div id="resultContent"></div>
+</div>
+
+<footer>退休计算器 · 仅供参考，请以当地社保局为准</footer>
+</div>
+
+<script>
+// ─── 延迟退休政策参数 ───
+const POLICY_START = { year: 2025, month: 1 };
+const RULES = {
+  '男':     { origAge: 60, interval: 4, maxDelay: 36, target: 63 },
+  '女干部55': { origAge: 55, interval: 4, maxDelay: 36, target: 58 },
+  '女工人50': { origAge: 50, interval: 2, maxDelay: 60, target: 55 },
+};
+
+function daysInMonth(y, m) {
+  return new Date(y, m, 0).getDate();
+}
+
+function addMonths(y, m, d, n) {
+  let totalM = (y * 12 + m - 1) + n;
+  let ny = Math.floor(totalM / 12);
+  let nm = totalM % 12 + 1;
+  let nd = Math.min(d, daysInMonth(ny, nm));
+  return { year: ny, month: nm, day: nd };
+}
+
+function monthsBetween(y1, m1, y2, m2) {
+  let diff = (y2 - y1) * 12 + (m2 - m1);
+  return Math.max(0, diff);
+}
+
+function calcDelayedRetirement(birthY, birthM, birthD, key) {
+  const rule = RULES[key];
+  const origRetY = birthY + rule.origAge;
+  const origRetM = birthM;
+  const origRetD = Math.min(birthD, daysInMonth(origRetY, origRetM));
+
+  const mAfter = (origRetY - POLICY_START.year) * 12 + (origRetM - POLICY_START.month);
+  let delay = mAfter < 0 ? 0 : Math.min(rule.maxDelay, Math.floor(mAfter / rule.interval) + 1);
+
+  const actual = addMonths(origRetY, origRetM, origRetD, delay);
+
+  let ageY = actual.year - birthY;
+  let ageM = actual.month - birthM;
+  if (actual.day < birthD) ageM--;
+  if (ageM < 0) { ageY--; ageM += 12; }
+
+  return {
+    origAge: rule.origAge, delay, target: rule.target,
+    origDate: { year: origRetY, month: origRetM, day: origRetD },
+    actualDate: actual, ageY, ageM
+  };
+}
+
+// ─── UI 交互 ───
+document.querySelectorAll('input[name="gender"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('femaleType').classList.toggle('show', r.value === '女' && r.checked);
+  });
+});
+document.getElementById('hasGap').addEventListener('change', function () {
+  document.getElementById('gapRow').classList.toggle('show', this.checked);
+});
+
+function fmtDate(d) { return `${d.year}年${d.month}月${d.day}日`; }
+function fmtYM(y, m) { return `${y}年${m}月`; }
+
+function calculate() {
+  try {
+    const bY = +document.getElementById('birthYear').value;
+    const bM = +document.getElementById('birthMonth').value;
+    const bD = +document.getElementById('birthDay').value;
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const wY = +document.getElementById('workYear').value;
+    const wM = +document.getElementById('workMonth').value;
+    const sY = +document.getElementById('socialYear').value;
+    const sM = +document.getElementById('socialMonth').value;
+    const gap = document.getElementById('hasGap').checked ? (+document.getElementById('gapMonths').value || 0) : 0;
+
+    if (bM < 1 || bM > 12 || bD < 1 || bD > 31) { alert('请输入正确的出生日期'); return; }
+
+    let key;
+    if (gender === '男') { key = '男'; }
+    else {
+      const ft = document.querySelector('input[name="ftype"]:checked').value;
+      key = ft === '55' ? '女干部55' : '女工人50';
+    }
+
+    const ret = calcDelayedRetirement(bY, bM, bD, key);
+    const now = new Date();
+    const todayY = now.getFullYear(), todayM = now.getMonth() + 1, todayD = now.getDate();
+
+    const currentAge = todayY - bY - ((todayM < bM || (todayM === bM && todayD < bD)) ? 1 : 0);
+
+    const workMonths = monthsBetween(wY, wM,
+      Math.min(todayY * 12 + todayM, ret.actualDate.year * 12 + ret.actualDate.month) > todayY * 12 + todayM
+        ? todayY : ret.actualDate.year,
+      Math.min(todayY * 12 + todayM, ret.actualDate.year * 12 + ret.actualDate.month) > todayY * 12 + todayM
+        ? todayM : ret.actualDate.month);
+
+    const useY = (todayY * 12 + todayM <= ret.actualDate.year * 12 + ret.actualDate.month) ? todayY : ret.actualDate.year;
+    const useM = (todayY * 12 + todayM <= ret.actualDate.year * 12 + ret.actualDate.month) ? todayM : ret.actualDate.month;
+    const socialPaid = monthsBetween(sY, sM, useY, useM) - gap;
+    const remaining = (todayY * 12 + todayM < ret.actualDate.year * 12 + ret.actualDate.month)
+      ? monthsBetween(todayY, todayM, ret.actualDate.year, ret.actualDate.month) : 0;
+    const totalSocial = socialPaid + remaining;
+
+    const retDateObj = new Date(ret.actualDate.year, ret.actualDate.month - 1, ret.actualDate.day);
+    const todayObj = new Date(todayY, todayM - 1, todayD);
+    const daysLeft = Math.max(0, Math.ceil((retDateObj - todayObj) / 86400000));
+    const retired = todayObj >= retDateObj;
+
+    const ageStr = ret.ageM > 0 ? `${ret.ageY}岁${ret.ageM}个月` : `${ret.ageY}岁`;
+    const typeLabel = key === '男' ? '男职工' : key === '女干部55' ? '女干部/技术人员' : '女工人';
+
+    const minYears = 15;
+    const socialOk = totalSocial / 12 >= minYears;
+
+    const workPct = Math.min(100, workMonths / Math.max(1, (ret.ageY - (wY - bY)) * 12) * 100);
+    const socialPct = Math.min(100, socialPaid / (minYears * 12) * 100);
+
+    let html = '';
+
+    // 核心亮点
+    html += `<div class="highlight">
+      <div class="big">${retired ? '🎉 已退休' : `距退休还有 ${daysLeft} 天`}</div>
+      <div class="sub">${retired ? '' : `约 ${(daysLeft / 365.25).toFixed(1)} 年`} · 实际退休年龄 ${ageStr}</div>
+    </div>`;
+
+    // 延迟退休
+    html += `<div class="result-section"><h3>📌 延迟退休政策</h3><div class="result-grid">`;
+    html += item('身份类型', typeLabel);
+    html += item('原法定退休', `${ret.origAge}岁`);
+    html += item('原退休日期', fmtDate(ret.origDate));
+    html += item('政策延迟', `${ret.delay}个月`);
+    html += item('实际退休年龄', ageStr);
+    html += item('实际退休日期', `<strong>${fmtDate(ret.actualDate)}</strong>`);
+    html += `</div></div>`;
+
+    // 基本信息
+    html += `<div class="result-section"><h3>👤 基本信息</h3><div class="result-grid">`;
+    html += item('出生日期', `${bY}年${bM}月${bD}日`);
+    html += item('当前年龄', `${currentAge}岁`);
+    html += item('工作开始', fmtYM(wY, wM));
+    html += item('已工作', `${(workMonths / 12).toFixed(1)}年 (${workMonths}个月)`);
+    html += `</div></div>`;
+
+    // 社保
+    html += `<div class="result-section"><h3>💰 社保缴纳</h3><div class="result-grid">`;
+    html += item('社保开始', fmtYM(sY, sM));
+    html += item('已缴纳', `${(socialPaid / 12).toFixed(1)}年 (${socialPaid}个月)`);
+    if (gap > 0) html += item('中断', `${gap}个月`);
+    if (!retired) html += item('还需缴费', `${remaining}个月 (${(remaining / 12).toFixed(1)}年)`);
+    html += item('退休时总缴费', `${(totalSocial / 12).toFixed(1)}年 (${totalSocial}个月)`);
+    html += `</div>`;
+
+    html += `<div style="margin-top:12px;padding:10px 14px;border-radius:8px;background:${socialOk ? '#f0fff4' : '#fff5f5'}">
+      <span class="${socialOk ? 'status-ok' : 'status-bad'}">${socialOk ? '✅ 符合最低15年缴费要求' : '❌ 不足15年，需继续缴费'}</span>`;
+    if (!socialOk) {
+      const shortage = minYears * 12 - totalSocial;
+      html += `<br><span style="font-size:.85rem;color:var(--text2)">还需缴费 ${shortage} 个月（${(shortage / 12).toFixed(1)}年）</span>`;
+    }
+    html += `</div></div>`;
+
+    // 进度条
+    html += `<div class="result-section"><h3>📈 进度</h3>`;
+    html += progressBar('工作完成度', workPct, 'fill-work');
+    html += progressBar('社保进度（15年）', socialPct, 'fill-social');
+    html += `</div>`;
+
+    // 政策说明
+    html += `<div class="policy-note">
+      <strong>政策说明（国发〔2024〕30号，2025年1月1日起实施）</strong><br>
+      • 男职工：原60岁退休，每4个月延迟1个月，最终延迟至 <strong>63岁</strong><br>
+      • 女干部/技术人员：原55岁退休，每4个月延迟1个月，最终延迟至 <strong>58岁</strong><br>
+      • 女工人：原50岁退休，每2个月延迟1个月，最终延迟至 <strong>55岁</strong><br>
+      • 社保累计缴满15年方可领取养老金，缴费越长待遇越高
+    </div>`;
+
+    html += `<p style="text-align:right;font-size:.8rem;color:var(--text2);margin-top:14px">计算时间：${new Date().toLocaleString('zh-CN')}</p>`;
+
+    document.getElementById('resultContent').innerHTML = html;
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch (e) {
+    alert('计算出错：' + e.message);
+  }
+}
+
+function item(label, value) {
+  return `<div class="result-item"><span class="label">${label}</span><span class="value">${value}</span></div>`;
+}
+
+function progressBar(label, pct, cls) {
+  const p = Math.min(100, pct).toFixed(1);
+  return `<div class="progress-bar-wrap">
+    <div class="progress-label"><span>${label}</span><span>${p}%</span></div>
+    <div class="progress-bar"><div class="fill ${cls}" style="width:${p}%"></div></div>
+  </div>`;
+}
+</script>
+</body>
+</html>
