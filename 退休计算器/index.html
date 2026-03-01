@@ -228,14 +228,10 @@ function calculate() {
 
     const currentAge = todayY - bY - ((todayM < bM || (todayM === bM && todayD < bD)) ? 1 : 0);
 
-    const workMonths = monthsBetween(wY, wM,
-      Math.min(todayY * 12 + todayM, ret.actualDate.year * 12 + ret.actualDate.month) > todayY * 12 + todayM
-        ? todayY : ret.actualDate.year,
-      Math.min(todayY * 12 + todayM, ret.actualDate.year * 12 + ret.actualDate.month) > todayY * 12 + todayM
-        ? todayM : ret.actualDate.month);
-
-    const useY = (todayY * 12 + todayM <= ret.actualDate.year * 12 + ret.actualDate.month) ? todayY : ret.actualDate.year;
-    const useM = (todayY * 12 + todayM <= ret.actualDate.year * 12 + ret.actualDate.month) ? todayM : ret.actualDate.month;
+    const beforeRetirement = todayY * 12 + todayM <= ret.actualDate.year * 12 + ret.actualDate.month;
+    const useY = beforeRetirement ? todayY : ret.actualDate.year;
+    const useM = beforeRetirement ? todayM : ret.actualDate.month;
+    const workMonths = monthsBetween(wY, wM, useY, useM);
     const socialPaid = monthsBetween(sY, sM, useY, useM) - gap;
     const remaining = (todayY * 12 + todayM < ret.actualDate.year * 12 + ret.actualDate.month)
       ? monthsBetween(todayY, todayM, ret.actualDate.year, ret.actualDate.month) : 0;
